@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي الفرق – معلومات ودول وكرة قدم!</title>
+    <!-- Google Font: Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Control Buttons -->
+        <div class="top-controls">
+            <button class="control-btn" onclick="showEditor()" id="editBtn">✏️ تعديل الأسئلة</button>
+            <button class="control-btn" onclick="toggleFullScreen()" id="fullscreenBtn">🖼️ ملء الشاشة</button>
+        </div>
+
+        <!-- Introduction Screen -->
+        <div class="screen active" id="introScreen">
+            <h1 class="game-title">🎮 تحدي الفرق 🎮</h1>
+            <p class="subtitle">لعبة معلومات جماعية ممتعة!</p>
+
+            <div class="team-inputs">
+                <div class="team-input">
+                    <label for="teamA">اسم الفريق الأول:</label>
+                    <input type="text" id="teamA" placeholder="الفريق أ" value="الفريق أ">
+                </div>
+                <div class="team-input">
+                    <label for="teamB">اسم الفريق الثاني:</label>
+                    <input type="text" id="teamB" placeholder="الفريق ب" value="الفريق ب">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="startGame()">ابدأ اللعب</button>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div class="screen" id="instructionsScreen">
+            <h1 class="game-title">📜 كيفية اللعب</h1>
+
+            <div class="instructions">
+                <h2>قواعد اللعبة:</h2>
+                <ul>
+                    <li>تعاونوا كفريق للإجابة على كل سؤال معاً!</li>
+                    <li>لكل سؤال 30 ثانية للإجابة.</li>
+                    <li>الإجابة الصحيحة تمنح فريقك نقطة واحدة.</li>
+                    <li>الإجابة السريعة (أقل من 10 ثوانٍ) تمنح نقطة إضافية!</li>
+                    <li>الفريق صاحب أعلى نقاط يفوز باللعبة.</li>
+                    <li>استمتعوا بأربع جولات متنوعة: الدول 🌍، كرة القدم ⚽، الألغاز ❓، والسرعة 🕒.</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-success" onclick="showInstructions()">فهمت، لنبدأ!</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen" id="gameScreen">
+            <div class="game-header">
+                <div class="round-indicator" id="roundIndicator">
+                    <span id="roundIcon">🌍</span>
+                    <span id="roundName">جولة الدول</span>
+                </div>
+                <div class="timer-container">
+                    <div class="timer-circle" id="timerCircle" style="--progress: 0deg;">
+                        <span id="timerText">30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="score-board">
+                <div class="team-score" id="teamAScore">
+                    <h3 id="teamAName">الفريق أ</h3>
+                    <div class="score" id="teamAScoreValue">0</div>
+                </div>
+                <div class="team-score" id="teamBScore">
+                    <h3 id="teamBName">الفريق ب</h3>
+                    <div class="score" id="teamBScoreValue">0</div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-text" id="questionText">
+                    جارٍ تحميل السؤال...
+                </div>
+                <div class="options-container" id="optionsContainer">
+                    <!-- Options will be dynamically generated -->
+                </div>
+            </div>
+
+            <button class="btn btn-warning hidden" id="nextQuestionBtn" onclick="nextQuestion()">السؤال التالي</button>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="resultsScreen">
+            <div class="results-container">
+                <h1 class="winner-announcement" id="winnerAnnouncement">🏆 الفريق الفائز هو...! 🏆</h1>
+
+                <div class="final-scores">
+                    <div class="final-score-card leaderboard-entry" id="teamALeaderboard">
+                        <h3 id="finalTeamAName">الفريق أ</h3>
+                        <div class="final-score" id="finalTeamAScore">0</div>
+                        <div class="rank-badge" id="teamARank"></div>
+                    </div>
+                    <div class="final-score-card leaderboard-entry" id="teamBLeaderboard">
+                        <h3 id="finalTeamBName">الفريق ب</h3>
+                        <div class="final-score" id="finalTeamBScore">0</div>
+                        <div class="rank-badge" id="teamBRank"></div>
+                    </div>
+                </div>
+
+                <div class="game-stats" id="gameStats">
+                    <h3>📊 إحصائيات اللعبة</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">إجابات صحيحة:</span>
+                            <span class="stat-value" id="correctAnswers">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">متوسط السرعة:</span>
+                            <span class="stat-value" id="averageTime">0 ثانية</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">أفضل جولة:</span>
+                            <span class="stat-value" id="bestRound">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">إجابات سريعة:</span>
+                            <span class="stat-value" id="quickAnswers">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leaderboard-section" id="leaderboardSection">
+                    <h3>🏆 لوحة الصدارة</h3>
+                    <div class="leaderboard-list" id="leaderboardList">
+                        <!-- Leaderboard entries will be added dynamically -->
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" onclick="resetGame()">لعب مرة أخرى</button>
+                    <button class="btn btn-success" onclick="saveToLeaderboard()">حفظ النتيجة</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Editor Screen -->
+        <div class="screen" id="editorScreen">
+            <div class="editor-container">
+                <h1 class="game-title">✏️ محرر الأسئلة</h1>
+                <div class="editor-tabs">
+                    <button class="editor-tab active" onclick="showEditorCategory('countries', this)">🌍 الدول</button>
+                    <button class="editor-tab" onclick="showEditorCategory('football', this)">⚽ كرة القدم</button>
+                    <button class="editor-tab" onclick="showEditorCategory('puzzles', this)">❓ الألغاز</button>
+                    <button class="editor-tab" onclick="showEditorCategory('speed', this)">🕒 السرعة</button>
+                </div>
+
+                <div class="editor-content">
+                    <div class="question-form">
+                        <div class="form-group">
+                            <label for="questionTextInput">نص السؤال:</label>
+                            <input type="text" id="questionTextInput" placeholder="اكتب السؤال هنا...">
+                        </div>
+                        <div class="form-group">
+                            <label>الخيارات:</label>
+                            <div class="options-form">
+                                <input type="text" id="option1Input" placeholder="الخيار الأول">
+                                <input type="text" id="option2Input" placeholder="الخيار الثاني">
+                                <input type="text" id="option3Input" placeholder="الخيار الثالث">
+                                <input type="text" id="option4Input" placeholder="الخيار الرابع">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="correctAnswerSelect">الإجابة الصحيحة:</label>
+                            <select id="correctAnswerSelect">
+                                <option value="0">الخيار الأول</option>
+                                <option value="1">الخيار الثاني</option>
+                                <option value="2">الخيار الثالث</option>
+                                <option value="3">الخيار الرابع</option>
+                            </select>
+                        </div>
+                        <div class="editor-actions">
+                            <button class="btn btn-success btn-small" onclick="saveQuestion()">حفظ السؤال</button>
+                            <button class="btn btn-primary btn-small" onclick="addNewQuestion()">سؤال جديد</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteQuestion()">حذف السؤال</button>
+                        </div>
+                    </div>
+
+                    <div class="question-list-container">
+                        <h4>قائمة الأسئلة الحالية</h4>
+                        <div class="question-list" id="questionList">
+                            <!-- Questions will be dynamically generated -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-footer-actions">
+                    <button class="btn btn-secondary" onclick="resetToDefault()">استعادة الافتراضي</button>
+                    <button class="btn btn-secondary" onclick="exportQuestions()">تصدير</button>
+                    <button class="btn btn-secondary" onclick="importQuestions()">استيراد</button>
+                    <button class="btn btn-primary" onclick="backToGame()">العودة للعبة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Particle layer for visual effects -->
+    <div class="particle-container" id="particleLayer" aria-hidden="true"></div>
+
+    <!-- Load external JavaScript files -->
+    <script src="questions.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

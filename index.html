@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تحدي الفرق – معلومات ودول وكرة قدم!</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
     <!-- Google Font: Tajawal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +22,7 @@
 
         <!-- Introduction Screen -->
         <div class="screen active" id="introScreen">
-            <h1 class="game-title">🎮 تحدي الفرق 🎮</h1>
+            <h1 class="game-title" data-text="🎮 تحدي الفرق 🎮">🎮 تحدي الفرق 🎮</h1>
             <p class="subtitle">لعبة معلومات جماعية ممتعة!</p>
 
             <div class="team-inputs">
@@ -134,7 +136,10 @@
                 </div>
 
                 <div class="leaderboard-section" id="leaderboardSection">
-                    <h3>🏆 لوحة الصدارة</h3>
+                    <div class="leaderboard-header">
+                        <h3>🏆 لوحة الصدارة</h3>
+                        <button class="btn-clear" onclick="clearLeaderboard()">🗑️ مسح السجل</button>
+                    </div>
                     <div class="leaderboard-list" id="leaderboardList">
                         <!-- Leaderboard entries will be added dynamically -->
                     </div>
@@ -149,7 +154,8 @@
 
         <!-- Question Editor Screen -->
         <div class="screen" id="editorScreen">
-            <div class="editor-container">
+            <!-- (Content remains the same as previous version) -->
+             <div class="editor-container">
                 <h1 class="game-title">✏️ محرر الأسئلة</h1>
                 <div class="editor-tabs">
                     <button class="editor-tab active" onclick="showEditorCategory('countries', this)">🌍 الدول</button>
@@ -157,52 +163,16 @@
                     <button class="editor-tab" onclick="showEditorCategory('puzzles', this)">❓ الألغاز</button>
                     <button class="editor-tab" onclick="showEditorCategory('speed', this)">🕒 السرعة</button>
                 </div>
-
                 <div class="editor-content">
                     <div class="question-form">
-                        <div class="form-group">
-                            <label for="questionTextInput">نص السؤال:</label>
-                            <input type="text" id="questionTextInput" placeholder="اكتب السؤال هنا...">
-                        </div>
-                        <div class="form-group">
-                            <label>الخيارات:</label>
-                            <div class="options-form">
-                                <input type="text" id="option1Input" placeholder="الخيار الأول">
-                                <input type="text" id="option2Input" placeholder="الخيار الثاني">
-                                <input type="text" id="option3Input" placeholder="الخيار الثالث">
-                                <input type="text" id="option4Input" placeholder="الخيار الرابع">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="correctAnswerSelect">الإجابة الصحيحة:</label>
-                            <select id="correctAnswerSelect">
-                                <option value="0">الخيار الأول</option>
-                                <option value="1">الخيار الثاني</option>
-                                <option value="2">الخيار الثالث</option>
-                                <option value="3">الخيار الرابع</option>
-                            </select>
-                        </div>
-                        <div class="editor-actions">
-                            <button class="btn btn-success btn-small" onclick="saveQuestion()">حفظ السؤال</button>
-                            <button class="btn btn-primary btn-small" onclick="addNewQuestion()">سؤال جديد</button>
-                            <button class="btn btn-danger btn-small" onclick="deleteQuestion()">حذف السؤال</button>
-                        </div>
+                        <div class="form-group"><label for="questionTextInput">نص السؤال:</label><input type="text" id="questionTextInput" placeholder="اكتب السؤال هنا..."></div>
+                        <div class="form-group"><label>الخيارات:</label><div class="options-form"><input type="text" id="option1Input" placeholder="الخيار الأول"><input type="text" id="option2Input" placeholder="الخيار الثاني"><input type="text" id="option3Input" placeholder="الخيار الثالث"><input type="text" id="option4Input" placeholder="الخيار الرابع"></div></div>
+                        <div class="form-group"><label for="correctAnswerSelect">الإجابة الصحيحة:</label><select id="correctAnswerSelect"><option value="0">الخيار الأول</option><option value="1">الخيار الثاني</option><option value="2">الخيار الثالث</option><option value="3">الخيار الرابع</option></select></div>
+                        <div class="editor-actions"><button class="btn btn-success btn-small" onclick="saveQuestion()">حفظ السؤال</button><button class="btn btn-primary btn-small" onclick="addNewQuestion()">سؤال جديد</button><button class="btn btn-danger btn-small" onclick="deleteQuestion()">حذف السؤال</button></div>
                     </div>
-
-                    <div class="question-list-container">
-                        <h4>قائمة الأسئلة الحالية</h4>
-                        <div class="question-list" id="questionList">
-                            <!-- Questions will be dynamically generated -->
-                        </div>
-                    </div>
+                    <div class="question-list-container"><h4>قائمة الأسئلة الحالية</h4><div class="question-list" id="questionList"></div></div>
                 </div>
-
-                <div class="editor-footer-actions">
-                    <button class="btn btn-secondary" onclick="resetToDefault()">استعادة الافتراضي</button>
-                    <button class="btn btn-secondary" onclick="exportQuestions()">تصدير</button>
-                    <button class="btn btn-secondary" onclick="importQuestions()">استيراد</button>
-                    <button class="btn btn-primary" onclick="backToGame()">العودة للعبة</button>
-                </div>
+                <div class="editor-footer-actions"><button class="btn btn-secondary" onclick="resetToDefault()">استعادة الافتراضي</button><button class="btn btn-secondary" onclick="exportQuestions()">تصدير</button><button class="btn btn-secondary" onclick="importQuestions()">استيراد</button><button class="btn btn-primary" onclick="backToGame()">العودة للعبة</button></div>
             </div>
         </div>
     </div>

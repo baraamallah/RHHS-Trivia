@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Questions collection - read for everyone, write only for authenticated users
+    match /questions/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Quiz results - write for everyone (public quiz), read only for authenticated users
+    match /quizResults/{document=**} {
+      allow write: if true;
+      allow read: if request.auth != null;
+    }
+  }
+}

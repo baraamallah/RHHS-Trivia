@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+:root {
+    --primary-color: #0056b3;
+    --secondary-color: #007bff;
+    --light-color: #ffffff;
+    --dark-color: #333;
+    --correct-color: #28a745;
+    --incorrect-color: #dc3545;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Cairo', sans-serif;
+    color: var(--dark-color);
+    line-height: 1.6;
+    background-image: url('../images/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    direction: rtl;
+    padding: 1rem;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: -1;
+}
+
+.quiz-container {
+    background-color: var(--light-color);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    width: 95%;
+    max-width: 700px;
+    overflow: hidden;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animated {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.quiz-header { padding-bottom: 1.5rem; margin-bottom: 1rem; }
+.school-logo { max-width: 100px; margin-bottom: 1rem; }
+h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
+.question-text { font-size: 1.5rem; font-weight: 600; margin-bottom: 2rem; min-height: 80px; }
+
+/* Name Input */
+.name-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.name-input:focus { outline-color: var(--secondary-color); }
+
+/* Difficulty Selection */
+.difficulty-selection { display: flex; flex-direction: column; gap: 15px; }
+
+/* Options */
+.options-list { list-style-type: none; padding: 0; margin: 0; }
+.option-btn {
+    background-color: #f8f9fa; border: 2px solid #dee2e6; color: var(--dark-color);
+    display: block; width: 100%; cursor: pointer; font-size: 1.1rem;
+    font-family: inherit; padding: 15px; margin-bottom: 10px; border-radius: 10px;
+    transition: all 0.3s ease; text-align: right;
+}
+.option-btn:hover:not([disabled]) { background-color: #e9ecef; border-color: var(--secondary-color); }
+.option-btn.correct { background-color: var(--correct-color); color: var(--light-color); border-color: var(--correct-color); }
+.option-btn.incorrect { background-color: var(--incorrect-color); color: var(--light-color); border-color: var(--incorrect-color); }
+
+/* Buttons */
+.btn {
+    background-color: var(--primary-color); color: var(--light-color); border: none;
+    padding: 15px 30px; font-size: 1.2rem; font-family: inherit; border-radius: 10px;
+    cursor: pointer; transition: background-color 0.3s ease; margin-top: 1rem; width: 100%;
+}
+.btn:hover { background-color: var(--secondary-color); }
+.btn.btn-secondary { background-color: #6c757d; }
+.btn.btn-secondary:hover { background-color: #5a6268; }
+.btn.all-questions { background-color: #343a40; }
+.btn.all-questions:hover { background-color: #23272b; }
+
+.quiz-footer {
+    display: flex; justify-content: center; align-items: center;
+    padding-top: 1.5rem; margin-top: 1.5rem; border-top: 2px solid #eee;
+    font-size: 1rem; font-weight: 600;
+}
+.hidden { display: none; }
+
+/* Progress Bar */
+#progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+#progress-bar {
+    height: 10px;
+    width: 0%;
+    background-color: var(--correct-color);
+    border-radius: 10px;
+    transition: width 0.4s ease-in-out;
+}
+
+/* Certificate Styling (for PDF export) */
+#certificate-wrapper {
+    position: absolute;
+    left: -9999px; /* Hide it off-screen */
+    top: auto;
+    width: 800px;
+    height: 565px;
+}
+#certificate {
+    width: 100%; height: 100%;
+    border: 10px solid var(--primary-color);
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: 'Cairo', sans-serif;
+    color: #333;
+    display: flex; flex-direction: column; justify-content: space-between;
+}
+.cert-header, .cert-footer { text-align: center; }
+.cert-logo { max-width: 80px; }
+#certificate h1 { font-size: 36px; color: var(--primary-color); margin-top: 10px; }
+.cert-body { text-align: center; }
+.cert-intro { font-size: 20px; }
+.cert-name { font-size: 32px; color: var(--secondary-color); margin: 15px 0; }
+.cert-details { font-size: 18px; }
+.cert-rating { font-size: 22px; margin-top: 15px; font-weight: bold; color: var(--correct-color); }
+.cert-footer p { margin: 0; font-size: 14px; color: #777; }

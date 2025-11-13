@@ -1,178 +1,61 @@
-# تحدي الفرق – معلومات ودول وكرة قدم! (Arabic Team Strategy Trivia)
+# تطبيق اختبار تاريخ مدرسة رفيق الحريري الثانوية
 
-## 🎮 Game Overview
+## 📝 الوصف
 
-An interactive, colorful Arabic trivia game designed for team collaboration! This single-file HTML game features multiple rounds covering countries, football, general knowledge, and speed rounds, with a 30-second timer for each question.
+هذا المشروع هو تطبيق ويب تفاعلي مصمم لاختبار معلومات الطلاب وأعضاء المجتمع المدرسي حول تاريخ وإرث مدرسة رفيق الحريري الثانوية. يوفر التطبيق تجربة شخصية، حيث يبدأ المستخدم بإدخال اسمه، ثم يختار مستوى صعوبة الأسئلة، وفي النهاية يحصل على شهادة تقدير PDF يمكنه تحميلها.
 
-## 🌟 Features
+## ✨ الميزات
 
-- **RTL Arabic Support**: Full right-to-left language support optimized for Arabic text
-- **Team-Based Gameplay**: Two teams compete to answer questions collaboratively
-- **4 Themed Rounds**:
-  - 🌍 **Countries**: Capitals, flags, and landmarks
-  - ⚽ **Football**: Teams, players, and World Cup facts
-  - ❓ **Puzzles**: Logic puzzles and riddles
-  - 🕒 **Speed**: Quick questions with short answers
-- **30-Second Timer**: Visual countdown timer with warning effects
-- **Scoring System**: Points for correct answers, bonus points for quick responses
-- **Question Editor**: Built-in interface to add, edit, and customize questions
-- **Responsive Design**: Works on desktop, tablet, and mobile devices
-- **Data Persistence**: Questions saved to browser local storage
+-   **تجربة شخصية:** يطلب من المستخدم إدخال اسمه في البداية.
+-   **مستويات صعوبة:** يمكن للمستخدم اختيار مستوى الأسئلة (سهل، متوسط، صعب) أو الإجابة على جميع الأسئلة.
+-   **تصميم جذاب:** واجهة مستخدم حديثة مع خلفية ضبابية وشعار المدرسة.
+-   **شريط تقدم:** يوضح للمستخدم مدى تقدمه خلال الاختبار.
+-   **تقييم فوري:** تظهر النتيجة فور انتهاء الاختبار مع تقييم مخصص (مثال: "خبير في تاريخ المدرسة!").
+-   **شهادة PDF:** إمكانية تحميل شهادة تقدير أنيقة تحتوي على اسم الطالب ونتيجته وتاريخ إنجاز الاختبار.
+-   **صفحة مدير محمية:** صفحة `editor.html` محمية بكلمة مرور بسيطة لتعديل الأسئلة.
 
-## 🚀 How to Play
-
-1. **Open the Game**: Simply open `index.html` in any modern web browser
-2. **Enter Team Names**: Input names for both competing teams
-3. **Read Instructions**: Learn about game rules and teamwork
-4. **Play Through Rounds**: Each round contains 3-5 questions
-5. **Answer Collaboratively**: Teams discuss and select answers together
-6. **Winning Team**: Team with highest score wins!
-
-## 🎯 Game Rules
-
-- Each question has 30 seconds for team discussion
-- Teams alternate answering questions
-- Correct answer = 1 point
-- Quick answer (under 10 seconds) = bonus point
-- No penalties for wrong answers
-- 4 rounds with different themes
-
-## ⚙️ Technical Requirements
-
-- **Browser**: Modern browsers (Chrome 60+, Firefox 55+, Safari 12+)
-- **JavaScript**: Must be enabled
-- **Resolution**: Works best on 1024x768 and higher
-- **Storage**: Uses browser local storage for question persistence
-
-## 📝 Question Editor
-
-The game includes a built-in question editor accessible via the "تعديل الأسئلة" button:
-
-- **Add Questions**: Create new questions for any category
-- **Edit Questions**: Modify existing questions and answers
-- **Delete Questions**: Remove unwanted questions
-- **Import/Export**: Save question sets as JSON files
-- **Reset Options**: Restore default question sets
-
-## 🎨 Design Features
-
-- **Glass Morphism**: Modern translucent design with backdrop blur effects
-- **Gradient Animations**: Dynamic color transitions and glowing effects
-- **Smooth Transitions**: Fluid animations between game states
-- **Mobile Responsive**: Optimized layout for all screen sizes
-- **Arabic Typography**: Clean, readable Arabic fonts throughout
-
-## 📁 File Structure
-Arabic_Trivia/
-├── index.html # Main HTML structure and layout
-├── styles.css # All CSS styling and animations
-├── game.js # Game logic and functionality
-├── questions.js # Questions database and management
-└── README.md # This documentation
+## 📁 هيكل الملفات
+/تطبيق_اختبار_المدرسة/
+|
+|-- index.html -> الصفحة الرئيسية للتطبيق (الاسم، الصعوبة، الاختبار، النتيجة).
+|-- editor.html -> صفحة تعديل الأسئلة (محمية).
+|-- README.md -> ملف الشرح هذا.
+|
+|-- /css/
+| |-- style.css -> ملف التصميم والأنماط (CSS).
+|
+|-- /js/
+| |-- questions.js -> قاعدة بيانات الأسئلة بصيغة JavaScript Array.
+| |-- quiz.js -> الكود البرمجي الرئيسي الذي يدير منطق التطبيق.
+|
+|-- /images/
+|-- logo.png -> شعار المدرسة.
+|-- bg.jpg -> صورة الخلفية.
 code
 Code
-### File Descriptions
+## 🚀 كيفية الإعداد والاستخدام
 
-- **index.html**: Clean HTML structure with semantic markup and accessibility features
-- **styles.css**: Complete styling system with responsive design and animations
-- **game.js**: Core game logic, state management, and user interactions
-- **questions.js**: Question database with default questions and management functions
+1.  **تحميل الملفات:** قم بتحميل جميع الملفات والمجلدات إلى خادم الويب الخاص بك أو افتحها محلياً على جهازك.
+2.  **تخصيص الصور:** استبدل `images/logo.png` و `images/bg.jpg` بالصور الخاصة بمدرستك.
+3.  **تعديل الأسئلة:**
+    -   افتح ملف `editor.html` في متصفحك.
+    -   أدخل كلمة المرور (الافتراضية هي `rhhs2024`).
+    -   انسخ كود JSON، وقم بتعديله في محرر نصوص.
+    -   الصق الكود المحدث في ملف `js/questions.js`.
+4.  **تغيير كلمة المرور:**
+    -   افتح ملف `editor.html`.
+    -   ابحث عن `const password = "rhhs2024";` وقم بتغييرها إلى كلمة المرور التي تريدها.
 
-## 🔧 Deployment
+## 🔧 التطوير المستقبلي (التحليلات وقاعدة البيانات)
 
-### Local Development
-1. Clone or download this repository
-2. Ensure all files are in the same directory: `index.html`, `styles.css`, `game.js`, `questions.js`
-3. Open `index.html` in your web browser
-4. Start playing immediately!
+تم تصميم الكود ليكون قابلاً للتوسيع. لربطه بقاعدة بيانات:
 
-### File Dependencies
-
-The game requires all files to be present and properly linked:
-index.html (main entry point)
-├── links to: styles.css
-├── loads: questions.js (first)
-└── loads: game.js (second)
-code
-Code
-### Development Notes
-
-- **styles.css**: Contains all visual styles, animations, and responsive design
-- **questions.js**: Must be loaded before `game.js` as it provides the question database
-- **game.js**: Contains all game logic and uses questions from `questions.js`
-- **Modular Design**: Easy to customize styles without touching game logic
-- **Question Management**: Edit `questions.js` directly to add default questions
-
-### Web Hosting
-- **GitHub Pages**: Free static hosting
-- **Netlify**: Drag-and-drop deployment
-- **Vercel**: Zero-config deployment
-- **Any static hosting service**: Works everywhere
-
-### Server Option
-```bash
-# Using Python
-python3 -m http.server 8000
-
-# Using Node.js
-npx serve .
-
-# Using PHP
-php -S localhost:8000```
-
-## 🌐 Browser Compatibility
-
-- ✅ Chrome (60+)
-- ✅ Firefox (55+)
-- ✅ Safari (12+)
-- ✅ Edge (79+)
-- ✅ Mobile Chrome (60+)
-- ✅ Mobile Safari (12+)
-
-## 📱 Mobile Features
-
-- **Touch-Friendly**: Large tap targets and touch gestures
-- **Responsive Layout**: Adapts to screen size
-- **Orientation Support**: Works in portrait and landscape
-- **Performance Optimized**: Fast loading and smooth animations
-
-## 🔒 Privacy & Data
-
-- **No Tracking**: No analytics or user tracking
-- **Local Storage Only**: Questions saved locally in browser
-- **Offline Play**: Works without internet connection after loading
-- **No Server Required**: Completely client-side application
-
-## 🎮 Educational Value
-
-Perfect for:
-- **Team Building**: Encourages collaboration and discussion
-- **Educational Settings**: Classroom activities and learning
-- **Family Game Night**: Fun for all ages
-- **Cultural Exchange**: Learn about countries, sports, and general knowledge
-- **Arabic Language Practice**: Improve Arabic reading and comprehension
-
-## 🐛 Troubleshooting
-
-**Timer Not Working?**
-- Check that JavaScript is enabled
-- Try refreshing the page
-- Ensure browser supports modern JavaScript
-
-**Questions Not Saving?**
-- Check browser local storage permissions
-- Clear browser cache and try again
-- Try different browser if needed
-
-**Layout Issues on Mobile?**
-- Refresh the page
-- Check device orientation
-- Ensure mobile browser supports CSS Grid
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
----
-
-**Made with ❤️ for team collaboration and fun learning!**
+-   في ملف `js/quiz.js`، ابحث عن دالة `showResult()`.
+-   ستجد تعليقًا: `// FUTURE: Send analytics data to the server`.
+-   في هذا المكان، يمكنك إضافة كود (مثل `fetch` API) لإرسال بيانات مثل:
+    -   اسم المستخدم (`userName`)
+    -   النتيجة (`score`)
+    -   إجمالي الأسئلة (`currentQuestions.length`)
+    -   مستوى الصعوبة المختار (`selectedDifficulty`)
+    -   التاريخ والوقت (`new Date()`)
+-   يمكنك بعد ذلك إنشاء لوحة تحكم (Dashboard) لعرض هذه التحليلات وتتبع أداء المستخدمين.

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر الأسئلة - RHHS Trivia</title>
+    <link rel="stylesheet" href="css/question-editor.css">
+    <link rel="icon" href="images/logo.png" type="image/png">
+</head>
+<body>
+    <div id="editor-container" style="display: none;">
+        <header class="editor-header">
+            <img src="images/logo.png" alt="شعار المدرسة" class="header-logo">
+            <h1>✏️ محرر الأسئلة التفاعلي</h1>
+            <p>إدارة وتعديل أسئلة الاختبار</p>
+            <div style="margin-top: 1rem;">
+                <span id="user-email" style="color: #666; font-size: 0.9rem;"></span>
+                <button id="logout-btn" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 تسجيل الخروج</button>
+            </div>
+            <div class="header-actions">
+                <button id="add-question-btn" class="btn-primary">➕ إضافة سؤال جديد</button>
+                <button id="import-initial-btn" class="btn-warning">📤 رفع الأسئلة الأولية</button>
+                <button id="save-all-btn" class="btn-success">💾 حفظ جميع التغييرات</button>
+                <button id="export-json-btn" class="btn-secondary">📥 تصدير JSON</button>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">إجمالي الأسئلة:</span>
+                <span class="stat-value" id="total-questions">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">سهل:</span>
+                <span class="stat-value easy" id="easy-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">متوسط:</span>
+                <span class="stat-value medium" id="medium-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">صعب:</span>
+                <span class="stat-value hard" id="hard-count">0</span>
+            </div>
+        </div>
+
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label>تصفية حسب الصعوبة:</label>
+                <select id="filter-difficulty">
+                    <option value="all">الكل</option>
+                    <option value="easy">سهل</option>
+                    <option value="medium">متوسط</option>
+                    <option value="hard">صعب</option>
+                </select>
+            </div>
+            <div class="search-group">
+                <input type="text" id="search-input" placeholder="🔍 ابحث في الأسئلة...">
+            </div>
+        </div>
+
+        <div id="questions-container" class="questions-grid">
+            <!-- Questions will be loaded here dynamically -->
+        </div>
+
+        <!-- Add/Edit Question Modal -->
+        <div id="question-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">إضافة سؤال جديد</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>نص السؤال:</label>
+                        <textarea id="question-text" rows="3" placeholder="اكتب السؤال هنا..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>الخيارات:</label>
+                        <div class="options-editor">
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="0" id="correct-0">
+                                <input type="text" id="option-0" placeholder="الخيار 1">
+                                <label for="correct-0" class="correct-label">✓</label>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="1" id="correct-1">
+                                <input type="text" id="option-1" placeholder="الخيار 2">
+                                <label for="correct-1" class="correct-label">✓</label>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="2" id="correct-2">
+                                <input type="text" id="option-2" placeholder="الخيار 3">
+                                <label for="correct-2" class="correct-label">✓</label>
+                            </div>
+                            <div class="option-input">
+                                <input type="radio" name="correct-answer" value="3" id="correct-3">
+                                <input type="text" id="option-3" placeholder="الخيار 4">
+                                <label for="correct-3" class="correct-label">✓</label>
+                            </div>
+                        </div>
+                        <p class="help-text">اختر الإجابة الصحيحة بالنقر على ✓</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>مستوى الصعوبة:</label>
+                        <div class="difficulty-selector">
+                            <button type="button" class="difficulty-option" data-difficulty="easy">🟢 سهل</button>
+                            <button type="button" class="difficulty-option" data-difficulty="medium">🟠 متوسط</button>
+                            <button type="button" class="difficulty-option" data-difficulty="hard">🔴 صعب</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-question-btn" class="btn-primary">💾 حفظ السؤال</button>
+                    <button class="btn-secondary close-modal">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content small">
+                <div class="modal-header">
+                    <h2>تأكيد الحذف</h2>
+                    <button class="close-delete-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>هل أنت متأكد من حذف هذا السؤال؟</p>
+                    <p class="warning-text">⚠️ لا يمكن التراجع عن هذا الإجراء</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-delete-btn" class="btn-danger">🗑️ حذف</button>
+                    <button class="btn-secondary close-delete-modal">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/questions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/question-editor.js"></script>
+</body>
+</html>

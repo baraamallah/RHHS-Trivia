@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإحصائيات - RHHS Trivia</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" href="images/logo.png" type="image/png">
+</head>
+<body>
+    <div id="admin-container" style="display: none;">
+        <header class="admin-header">
+            <img src="images/logo.png" alt="شعار المدرسة" class="header-logo">
+            <h1>📊 لوحة تحكم الإحصائيات</h1>
+            <p>مدرسة رفيق الحريري الثانوية</p>
+            <div style="margin-top: 1rem;">
+                <span id="user-email" style="color: #666; font-size: 0.9rem;"></span>
+                <button id="logout-btn" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 تسجيل الخروج</button>
+            </div>
+        </header>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>إجمالي المشاركين</h3>
+                <p class="stat-number" id="total-participants">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>متوسط النتائج</h3>
+                <p class="stat-number" id="average-score">0%</p>
+            </div>
+            <div class="stat-card">
+                <h3>أعلى نتيجة</h3>
+                <p class="stat-number" id="highest-score">0%</p>
+            </div>
+            <div class="stat-card">
+                <h3>أدنى نتيجة</h3>
+                <p class="stat-number" id="lowest-score">0%</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <label>
+                تصفية حسب الصعوبة:
+                <select id="difficulty-filter">
+                    <option value="all">الكل</option>
+                    <option value="easy">سهل</option>
+                    <option value="medium">متوسط</option>
+                    <option value="hard">صعب</option>
+                </select>
+            </label>
+            <button id="export-btn" class="export-btn">📥 تصدير البيانات (CSV)</button>
+        </div>
+
+        <div class="results-container">
+            <h2>نتائج الاختبارات</h2>
+            <div class="table-wrapper">
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>النتيجة</th>
+                            <th>النسبة المئوية</th>
+                            <th>الصعوبة</th>
+                            <th>التاريخ والوقت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-tbody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">جاري تحميل البيانات...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

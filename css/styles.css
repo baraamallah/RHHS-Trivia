@@ -32,6 +32,63 @@ body {
     font-size: 16px; /* Base font size for better readability */
 }
 
+/* Timer Styles */
+.timer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--dark-color);
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.timer-container.warning {
+    border-color: var(--warning-color);
+    background: rgba(255, 193, 7, 0.2);
+    color: #856404;
+}
+
+.timer-container.danger {
+    border-color: var(--incorrect-color);
+    background: rgba(220, 53, 69, 0.2);
+    color: #721c24;
+    animation: pulse 1s infinite;
+}
+
+.timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    min-width: 2rem;
+    text-align: center;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Enhanced timer for desktop */
+@media (min-width: 1200px) {
+    .timer-container {
+        font-size: 1.4rem;
+        padding: 1rem 2rem;
+        margin: 1.5rem 0;
+    }
+    
+    .timer {
+        font-size: 1.8rem;
+    }
+}
+
 /* Enhanced desktop typography */
 @media (min-width: 1200px) {
     body {

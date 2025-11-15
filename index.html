@@ -16,12 +16,12 @@
     <div class="quiz-container animated" id="intro-container">
         <div class="quiz-header">
             <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
-            <h1>مسابقة RHHS التفاعلية</h1>
+            <img src="images/logo2.png" alt="شعار المدرسة" class="school-logo">
+            <h1>مرحبا بكم في مسابقة عيد المدرسىة التفاعلية!</h1>
         </div>
         <div class="quiz-body intro-body">
             <div class="intro-section">
-                <h2>مرحبا بكم في مسابقة المعرفة!</h2>
-                <p>مسابقة تفاعلية ممتعة لاختبار معلوماتكم ومهاراتكم في مختلف المجالات.</p>
+            <h2>مسابقة تفاعلية ممتعة لاختبار معلوماتكم عن تاريخ مدرستنا.</h2>
             </div>
             
             <div class="intro-section">
@@ -50,8 +50,8 @@
                         <p>أجب بسرعة قبل انتهاء الوقت</p>
                     </div>
                     <div class="info-card">
-                        <span class="info-icon">📚</span>
-                        <p>أسئلة متنوعة في مواضيع مختلفة</p>
+                        <span class="info-icon">🏫</span>
+                        <p>مواضيع مختلفة حول المدرسة</p>
                     </div>
                 </div>
             </div>
@@ -86,12 +86,18 @@
                 <div class="game-header">
                     <h2 id="current-team-turn"></h2>
                     <p id="current-team-score"></p>
+                    <div id="timer-container" class="timer-container">
+                        <span id="timer-text">الوقت المتبقي:</span>
+                        <span id="timer" class="timer">30</span>
+                        <span id="timer-unit">ثانية</span>
+                    </div>
                 </div>
                 <div id="progress-bar-container">
                     <div id="progress-bar"></div>
                 </div>
                 <div class="quiz-header">
                     <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
+                    <img src="images/logo2.png" alt="شعار المدرسة" class="school-logo">
                     <h2 id="question-text"></h2>
                 </div>
                 <div class="quiz-body">
@@ -137,5 +143,8 @@
     <script src="js/firebase-config.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/game.js"></script>
+    
+    <!-- Vercel Analytics -->
+    <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
 </body>
 </html>

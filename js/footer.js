@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <a href="about.html">فريق المطورين</a>
             </div>
             <div class="copyright">
-                &copy; 2025 جميع الحقوق محفوظة لثانوية رفيق الحريري ؤاشىلث.
+                &copy; 2025 جميع الحقوق محفوظة لثانوية رفيق الحريري.
             </div>
         </div>
     `;

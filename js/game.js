@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nextBtn = document.getElementById('next-btn');
     const currentQuestionSpan = document.getElementById('current-question');
     const totalQuestionsSpan = document.getElementById('total-questions');
+    const timerElement = document.getElementById('timer');
+    const timerContainer = document.querySelector('.timer-container');
 
     // End of Game
     const endGameContainer = document.getElementById('end-game-container');
@@ -36,6 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allQuestions = [];
     let teamQuestionCounts = []; // Track how many questions each team has answered
     let teamQuestionAssignments = []; // Track which questions each team should answer
+    
+    // Timer variables
+    let timer;
+    let timeLeft = 30; // 30 seconds per question
+    const totalTime = 30;
 
     // Load questions from Firestore
     async function loadQuestions() {
@@ -138,9 +145,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         updateTurnHeader();
         updateCompactLeaderboard();
+        
+        // Start timer for this question
+        startTimer();
     }
 
     function selectAnswer(e) {
+        // Stop the timer when an answer is selected
+        stopTimer();
+        
         const selectedBtn = e.target;
         const isCorrect = selectedBtn.dataset.correct === 'true';
 
@@ -175,6 +188,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     function moveToNextQuestion() {
+        // Stop the timer when moving to next question
+        stopTimer();
+        
         currentQuestionIndex++;
         
         if (currentQuestionIndex >= allQuestions.length) {
@@ -249,6 +265,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         while (optionsList.firstChild) {
             optionsList.removeChild(optionsList.firstChild);
         }
+        // Reset timer display
+        if (timerElement) {
+            timerElement.textContent = totalTime;
+            if (timerContainer) {
+                timerContainer.classList.remove('warning', 'danger');
+            }
+        }
     }
 
     function updateProgressBar() {
@@ -298,5 +321,71 @@ document.addEventListener('DOMContentLoaded', async () => {
         const currentTeam = teams.find(t => t.id === currentTeamIndex);
         currentTeamTurn.textContent = `دور فريق: ${currentTeam.name}`;
         currentTeamScore.textContent = `النقاط: ${currentTeam.score}`;
+    }
+    
+    // Timer functions
+    function startTimer() {
+        // Reset timer
+        timeLeft = totalTime;
+        timerElement.textContent = timeLeft;
+        timerContainer.classList.remove('warning', 'danger');
+        
+        // Clear any existing timer
+        if (timer) {
+            clearInterval(timer);
+        }
+        
+        // Start new timer
+        timer = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            
+            // Update timer styling based on remaining time
+            if (timeLeft <= 10 && timeLeft > 5) {
+                timerContainer.classList.add('warning');
+                timerContainer.classList.remove('danger');
+            } else if (timeLeft <= 5) {
+                timerContainer.classList.add('danger');
+                timerContainer.classList.remove('warning');
+            }
+            
+            // If time runs out, skip to next question
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                handleTimeOut();
+            }
+        }, 1000);
+    }
+    
+    function stopTimer() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+    
+    function handleTimeOut() {
+        // Increment the question count for this team (even if they didn't answer)
+        teamQuestionCounts[currentTeamIndex]++;
+        
+        // Disable all options
+        Array.from(optionsList.children).forEach(button => {
+            button.disabled = true;
+        });
+        
+        // Hide skip button and show next button
+        skipTeamBtn.classList.add('hidden');
+        nextBtn.classList.remove('hidden');
+        
+        // Update leaderboard
+        updateCompactLeaderboard();
+        
+        // Show correct answer
+        const question = allQuestions[currentQuestionIndex];
+        Array.from(optionsList.children).forEach((button, index) => {
+            if (index === question.correct) {
+                button.classList.add('correct');
+            }
+        });
     }
 });

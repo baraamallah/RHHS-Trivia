@@ -42,8 +42,108 @@ async function loadQuestionsFromFirestore() {
 }
 
 async function importInitialQuestions() {
+    if (typeof schoolQuestions === 'undefined') {
+        showNotification('خطأ: لم يتم العثور على الأسئلة الأولية في ملف questions.js', 'error');
+        return;
+    }
+    await importQuestionsFromFile(schoolQuestions, 'الأسئلة الأولية');
+}
+
+async function handleCustomFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!file.name.endsWith('.js')) {
+        showNotification('الرجاء اختيار ملف JavaScript (.js)', 'error');
+        return;
+    }
+    
+    try {
+        const fileContent = await readFileAsText(file);
+        // Extract the questions array from the file content
+        const questionsData = extractQuestionsFromFileContent(fileContent);
+        
+        if (!questionsData || !Array.isArray(questionsData)) {
+        showNotification('لم يتم العثور على بيانات الأسئلة في الملف', 'error');
+        return;
+        }
+        
+        await importQuestionsFromFile(questionsData, `ملف ${file.name}`);
+    } catch (error) {
+        console.error('Error processing file:', error);
+        showNotification('خطأ في معالجة الملف', 'error');
+    }
+    
+    // Reset file input
+    event.target.value = '';
+}
+
+function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = event => resolve(event.target.result);
+        reader.onerror = error => reject(error);
+        reader.readAsText(file);
+    });
+}
+
+function extractQuestionsFromFileContent(content) {
+    // Try to extract the questions array from the file content
+    try {
+        // Look for an array assignment in the file content
+        // This regex looks for arrays that might contain questions
+        const arrayPatterns = [
+            /(?:var|let|const)\s+(?:schoolQuestions|questions)\s*=\s*(\[[\s\S]*?\]);/,
+            /(?:schoolQuestions|questions)\s*=\s*(\[[\s\S]*?\]);/
+        ];
+        
+        for (const pattern of arrayPatterns) {
+            const match = content.match(pattern);
+            if (match && match[1]) {
+                try {
+                    // Safely parse the array content
+                    const parsed = JSON.parse(match[1]);
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    }
+                } catch (parseError) {
+                    console.warn('Could not parse as JSON, trying eval:', parseError);
+                    // Fallback to eval if JSON parsing fails
+                    try {
+                        const evaluated = eval(`(${match[1]})`);
+                        if (Array.isArray(evaluated)) {
+                            return evaluated;
+                        }
+                    } catch (evalError) {
+                        console.error('Error evaluating content:', evalError);
+                    }
+                }
+            }
+        }
+        
+        // If we can't find a pattern, try to evaluate the whole content
+        const evalFunction = new Function(`
+            ${content}
+            return typeof schoolQuestions !== 'undefined' ? schoolQuestions : 
+                   typeof questions !== 'undefined' ? questions : null;
+        `);
+        
+        const result = evalFunction();
+        if (Array.isArray(result)) {
+            return result;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Error extracting questions:', error);
+        showNotification('خطأ في استخراج الأسئلة من الملف', 'error');
+        return null;
+    }
+}
+
+async function importQuestionsFromFile(questionsArray, sourceName) {
     if (questions.length > 0) {
-        const confirm = window.confirm('تحذير: يوجد أسئلة في قاعدة البيانات. هل تريد حذفها واستبدالها بالأسئلة الأولية؟');
+        const confirm = window.confirm(`تحذير: يوجد أسئلة في قاعدة البيانات. هل تريد حذفها واستبدالها بـ ${sourceName}؟`);
         if (!confirm) return;
         
         for (const q of questions) {
@@ -51,16 +151,16 @@ async function importInitialQuestions() {
         }
     }
     
-    if (typeof schoolQuestions === 'undefined') {
-        showNotification('خطأ: لم يتم العثور على الأسئلة الأولية في ملف questions.js', 'error');
+    if (!questionsArray || !Array.isArray(questionsArray)) {
+        showNotification(`خطأ: لم يتم العثور على الأسئلة في ${sourceName}`, 'error');
         return;
     }
     
     try {
-        showNotification('جاري رفع الأسئلة...', 'info');
+        showNotification(`جاري رفع الأسئلة من ${sourceName}...`, 'info');
         
-        for (let i = 0; i < schoolQuestions.length; i++) {
-            const q = schoolQuestions[i];
+        for (let i = 0; i < questionsArray.length; i++) {
+            const q = questionsArray[i];
             await db.collection('questions').add({
                 question: q.question,
                 options: q.options,
@@ -71,7 +171,7 @@ async function importInitialQuestions() {
         }
         
         await loadQuestionsFromFirestore();
-        showNotification(`تم رفع ${schoolQuestions.length} سؤال بنجاح!`, 'success');
+        showNotification(`تم رفع ${questionsArray.length} سؤال بنجاح من ${sourceName}!`, 'success');
     } catch (error) {
         console.error('Error importing questions:', error);
         showNotification('خطأ في رفع الأسئلة', 'error');
@@ -90,6 +190,10 @@ function initializeEventListeners() {
     
     document.getElementById('add-question-btn').addEventListener('click', openAddModal);
     document.getElementById('import-initial-btn').addEventListener('click', importInitialQuestions);
+    document.getElementById('upload-custom-btn').addEventListener('click', () => {
+        document.getElementById('questions-file-input').click();
+    });
+    document.getElementById('questions-file-input').addEventListener('change', handleCustomFileUpload);
     document.getElementById('save-all-btn').addEventListener('click', saveAllChanges);
     document.getElementById('export-json-btn').addEventListener('click', exportJSON);
     document.getElementById('save-question-btn').addEventListener('click', saveQuestion);

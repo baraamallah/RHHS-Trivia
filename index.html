@@ -3,113 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رحلتنا: تاريخ مدرسة رفيق الحريري الثانوية</title>
-    
-    <!-- 1. ربط ملف التصميم CSS -->
+    <title>RHHS Trivia - Group Competition</title>
     <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- 2. ربط أيقونة المدرسة (Favicon) -->
     <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
 
 <main class="main-content">
     <!-- ============================================= -->
-    <!--      شاشة 1: إدخال الاسم                  -->
+    <!--      Intro Screen                             -->
     <!-- ============================================= -->
-    <div class="quiz-container animated" id="name-container">
+    <div class="quiz-container animated" id="intro-container">
         <div class="quiz-header">
             <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
-            <h1>📘 رحلتنا: تاريخ مدرستنا</h1>
-            <p style="margin-top: 1rem;">اختبر معلوماتك عن تاريخ مدرستنا العريقة.</p>
+            <h1>مسابقة RHHS التفاعلية</h1>
         </div>
-        <div class="quiz-body">
-            <input type="text" id="name-input" placeholder="الرجاء إدخال اسمك هنا..." class="name-input">
-            <button id="next-to-difficulty-btn" class="btn">التالي</button>
+        <div class="quiz-body intro-body">
+            <div class="intro-section">
+                <h2>مرحبا بكم في مسابقة المعرفة!</h2>
+                <p>مسابقة تفاعلية ممتعة لاختبار معلوماتكم ومهاراتكم في مختلف المجالات.</p>
+            </div>
+            
+            <div class="intro-section">
+                <h3>كيف تعمل اللعبة؟</h3>
+                <ul class="intro-list">
+                    <li>أنشئ فرقاً للمشاركة في المسابقة</li>
+                    <li>سيتم طرح أسئلة على كل فريق بالتناوب</li>
+                    <li>احصل على 10 نقاط لكل إجابة صحيحة</li>
+                    <li>الفريق الذي يجمع أكبر عدد من النقاط يفوز</li>
+                </ul>
+            </div>
+            
+            <div class="intro-section">
+                <h3>معلومات مهمة</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <span class="info-icon">👥</span>
+                        <p>كل فريق يحصل على نفس عدد الأسئلة</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">🏆</span>
+                        <p>سيتم عرض المتصدرين في الوقت الفعلي</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">⏱️</span>
+                        <p>أجب بسرعة قبل انتهاء الوقت</p>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">📚</span>
+                        <p>أسئلة متنوعة في مواضيع مختلفة</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="start-teams-btn" class="btn btn-success">بدء إنشاء الفرق</button>
         </div>
     </div>
 
     <!-- ============================================= -->
-    <!--      شاشة 2: اختيار الصعوبة               -->
+    <!--      Team Creation Screen                  -->
     <!-- ============================================= -->
-    <div class="quiz-container hidden" id="difficulty-container">
+    <div class="quiz-container hidden" id="team-creation-container">
         <div class="quiz-header">
-            <h2 id="welcome-message">أهلاً بك!</h2>
-            <p>الرجاء اختيار مستوى الصعوبة لبدء الاختبار.</p>
+            <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
+            <h1>إنشاء فرق للمنافسة</h1>
+            <p style="margin-top: 1rem;">أدخل أسماء الفرق المشاركة.</p>
         </div>
-        <div class="quiz-body difficulty-selection">
-            <button class="btn difficulty-btn" data-difficulty="easy">🟢 سهل</button>
-            <button class="btn difficulty-btn" data-difficulty="medium">🟠 متوسط</button>
-            <button class="btn difficulty-btn" data-difficulty="hard">🔴 صعب</button>
-            <button class="btn difficulty-btn all-questions" data-difficulty="all">🧠 كل الأسئلة</button>
+        <div class="quiz-body">
+            <input type="text" id="team-name-input" placeholder="أدخل اسم الفريق..." class="name-input">
+            <button id="add-team-btn" class="btn">أضف فريق</button>
+            <div id="teams-list" class="teams-list"></div>
+            <button id="start-game-btn" class="btn btn-success hidden">بدء اللعبة</button>
         </div>
     </div>
 
     <!-- ============================================= -->
-    <!--      شاشة 3: الاختبار                      -->
+    <!--      Game Screen                      -->
     <!-- ============================================= -->
-    <div class="quiz-container hidden" id="quiz-container">
-        <div id="progress-bar-container">
-            <div id="progress-bar"></div>
-        </div>
-        <div class="quiz-header">
-            <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
-            <h2 id="question-text">نص السؤال هنا...</h2>
-        </div>
-        <div class="quiz-body">
-            <div id="options-list" class="options-list">
-                <!-- الخيارات ستُضاف هنا عبر JavaScript -->
+    <div class="quiz-container hidden" id="game-container">
+        <div class="game-layout">
+            <div class="main-content-area">
+                <div class="game-header">
+                    <h2 id="current-team-turn"></h2>
+                    <p id="current-team-score"></p>
+                </div>
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <div class="quiz-header">
+                    <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
+                    <h2 id="question-text"></h2>
+                </div>
+                <div class="quiz-body">
+                    <div id="options-list" class="options-list"></div>
+                </div>
+                <div class="game-controls">
+                    <button id="skip-team-btn" class="btn btn-warning">تخطي الفريق</button>
+                    <button id="next-btn" class="btn hidden">السؤال التالي</button>
+                </div>
+                <div class="quiz-footer">
+                    <span>السؤال <span id="current-question"></span> من <span id="total-questions"></span></span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div id="compact-leaderboard" class="compact-leaderboard"></div>
             </div>
         </div>
-        <button id="next-btn" class="btn hidden">السؤال التالي</button>
-        <div class="quiz-footer">
-            <span>السؤال <span id="current-question"></span> من <span id="total-questions"></span></span>
-        </div>
     </div>
 
     <!-- ============================================= -->
-    <!--      شاشة 4: النتائج                      -->
+    <!--      End of Game Screen                      -->
     <!-- ============================================= -->
-    <div class="quiz-container hidden" id="result-container">
+    <div class="quiz-container hidden" id="end-game-container">
         <div class="quiz-header">
-            <img src="images/logo.png" alt="شعار المدرسة" class="school-logo">
-            <h1 id="result-title">تهانينا!</h1>
-            <p id="result-rating" style="font-size: 1.5rem; font-weight: bold; margin-top: 1rem; color: var(--secondary-color);"></p>
+            <h1 id="winner-announcement"></h1>
+            <div id="celebration"></div>
         </div>
-        <p style="font-size: 1.2rem; margin: 2rem 0;">
-            لقد حصلت على نتيجة <strong id="score" style="color: var(--primary-color); font-size: 1.8rem;"></strong>
-        </p>
-        <button id="restart-btn" class="btn btn-secondary">إعادة الاختبار</button>
+        <div class="quiz-body">
+            <h2>ملخص النتائج</h2>
+            <div id="final-scores"></div>
+        </div>
+        <button id="restart-btn" class="btn btn-secondary">إعادة اللعبة</button>
     </div>
 </main>
 
     <!-- ============================================= -->
-    <!--      ملفات JavaScript                     -->
+    <!--      JavaScript Files                     -->
     <!-- ============================================= -->
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     
-    <!-- 4. ملفات JavaScript الخاصة بالمشروع (يجب أن تكون بالترتيب الصحيح) -->
     <script src="js/firebase-config.js"></script>
+    <script src="js/footer.js"></script>
     <script src="js/game.js"></script>
-
-    <!-- Footer Section -->
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-logos">
-                <img src="images/logo.png" alt="Logo 1" class="footer-logo">
-                <img src="images/logo2.png" alt="Logo 2" class="footer-logo">
-            </div>
-            <div class="footer-links">
-            <a href="about.html"> فريق المطورين</a>
-            </div>
-            <div class="copyright">
-                &copy; 2025 جميع الحقوق محفوظة لثانوية رفيق الحريري.
-            </div>
-        </div>
-    </footer>
-
 </body>
 </html>

@@ -1,106 +1,129 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // تعريف العناصر
-    const nameContainer = document.getElementById('name-container');
-    const difficultyContainer = document.getElementById('difficulty-container');
-    const quizContainer = document.getElementById('quiz-container');
-    const resultContainer = document.getElementById('result-container');
+    // Intro Screen
+    const introContainer = document.getElementById('intro-container');
+    const startTeamsBtn = document.getElementById('start-teams-btn');
 
-    const nameInput = document.getElementById('name-input');
-    const nextToDifficultyBtn = document.getElementById('next-to-difficulty-btn');
-    const welcomeMessage = document.getElementById('welcome-message');
-    const difficultyButtons = document.querySelectorAll('.difficulty-btn');
-    
+    // Team Creation
+    const teamCreationContainer = document.getElementById('team-creation-container');
+    const teamNameInput = document.getElementById('team-name-input');
+    const addTeamBtn = document.getElementById('add-team-btn');
+    const teamsList = document.getElementById('teams-list');
+    const startGameBtn = document.getElementById('start-game-btn');
+
+    // Game
+    const gameContainer = document.getElementById('game-container');
+    const compactLeaderboard = document.getElementById('compact-leaderboard');
+    const currentTeamTurn = document.getElementById('current-team-turn');
+    const currentTeamScore = document.getElementById('current-team-score');
+    const progressBar = document.getElementById('progress-bar');
     const questionText = document.getElementById('question-text');
     const optionsList = document.getElementById('options-list');
+    const skipTeamBtn = document.getElementById('skip-team-btn');
     const nextBtn = document.getElementById('next-btn');
-    
-    const progressBar = document.getElementById('progress-bar');
     const currentQuestionSpan = document.getElementById('current-question');
     const totalQuestionsSpan = document.getElementById('total-questions');
-    
-    const resultTitle = document.getElementById('result-title');
-    const resultRating = document.getElementById('result-rating');
-    const scoreSpan = document.getElementById('score');
+
+    // End of Game
+    const endGameContainer = document.getElementById('end-game-container');
+    const winnerAnnouncement = document.getElementById('winner-announcement');
+    const celebration = document.getElementById('celebration');
+    const finalScores = document.getElementById('final-scores');
     const restartBtn = document.getElementById('restart-btn');
 
-    // متغيرات الحالة
-    let userName = "";
-    let selectedDifficulty = "";
+    let teams = [];
+    let currentTeamIndex = 0;
     let currentQuestionIndex = 0;
-    let score = 0;
-    let currentQuestions = [];
     let allQuestions = [];
+    let teamQuestionCounts = []; // Track how many questions each team has answered
+    let teamQuestionAssignments = []; // Track which questions each team should answer
 
-    // تحميل الأسئلة من Firestore
+    // Load questions from Firestore
     async function loadQuestions() {
         try {
             const snapshot = await db.collection('questions').orderBy('order', 'asc').get();
-            
             if (snapshot.empty) {
-                alert('لا توجد أسئلة في قاعدة البيانات. الرجاء استخدام محرر الأسئلة لإضافة أسئلة.');
+                alert('No questions found in the database. Please use the question editor to add questions.');
                 allQuestions = [];
             } else {
-                allQuestions = [];
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    allQuestions.push({
-                        question: data.question,
-                        options: data.options,
-                        correct: data.correct,
-                        difficulty: data.difficulty
-                    });
-                });
+                allQuestions = snapshot.docs.map(doc => doc.data());
             }
         } catch (error) {
             console.error('Error loading questions from Firestore:', error);
-            alert('خطأ في تحميل الأسئلة. تحقق من اتصالك بالإنترنت.');
+            alert('Error loading questions. Please check your internet connection.');
             allQuestions = [];
         }
     }
 
     await loadQuestions();
 
-    // الانتقال من شاشة الاسم إلى شاشة الصعوبة
-    nextToDifficultyBtn.addEventListener('click', () => {
-        userName = nameInput.value.trim();
-        if (userName === "") {
-            alert("الرجاء إدخال اسمك للمتابعة.");
-            return;
-        }
-        welcomeMessage.textContent = `أهلاً بك يا ${userName}!`;
-        switchView(nameContainer, difficultyContainer);
+    // Intro screen button
+    startTeamsBtn.addEventListener('click', () => {
+        switchView(introContainer, teamCreationContainer);
     });
 
-    // بدء الاختبار عند اختيار الصعوبة
-    difficultyButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            selectedDifficulty = button.dataset.difficulty;
-            startQuiz(selectedDifficulty);
+    addTeamBtn.addEventListener('click', () => {
+        const teamName = teamNameInput.value.trim();
+        if (teamName) {
+            teams.push({ name: teamName, score: 0, id: teams.length });
+            teamNameInput.value = '';
+            renderTeams();
+            if (teams.length > 0) {
+                startGameBtn.classList.remove('hidden');
+            }
+        }
+    });
+
+    function renderTeams() {
+        teamsList.innerHTML = '';
+        teams.forEach(team => {
+            const teamElement = document.createElement('div');
+            teamElement.classList.add('team-item');
+            teamElement.textContent = team.name;
+            teamsList.appendChild(teamElement);
         });
+    }
+
+    startGameBtn.addEventListener('click', () => {
+        // Initialize question assignments for fair distribution
+        initializeQuestionAssignments();
+        switchView(teamCreationContainer, gameContainer);
+        startQuiz();
     });
 
-    // دالة بدء الاختبار
-    function startQuiz(difficulty) {
-        switchView(difficultyContainer, quizContainer);
-        currentQuestionIndex = 0;
-        score = 0;
-        nextBtn.classList.add('hidden');
-
-        if (difficulty === 'all') {
-            currentQuestions = [...allQuestions];
-        } else {
-            currentQuestions = allQuestions.filter(q => q.difficulty === difficulty);
-        }
-        currentQuestions.sort(() => Math.random() - 0.5);
+    // Create fair question distribution among teams
+    function initializeQuestionAssignments() {
+        if (teams.length === 0) return;
         
-        totalQuestionsSpan.textContent = currentQuestions.length;
+        // Initialize tracking arrays
+        teamQuestionCounts = new Array(teams.length).fill(0);
+        teamQuestionAssignments = new Array(teams.length).fill().map(() => []);
+        
+        // Assign questions in a round-robin fashion
+        for (let i = 0; i < allQuestions.length; i++) {
+            const teamIndex = i % teams.length;
+            teamQuestionAssignments[teamIndex].push(i);
+        }
+    }
+
+    function startQuiz() {
+        currentQuestionIndex = 0;
+        currentTeamIndex = 0;
+        // Find the first team that should answer question 0
+        for (let i = 0; i < teamQuestionAssignments.length; i++) {
+            if (teamQuestionAssignments[i].includes(currentQuestionIndex)) {
+                currentTeamIndex = i;
+                break;
+            }
+        }
+        totalQuestionsSpan.textContent = allQuestions.length;
         showQuestion();
+        updateCompactLeaderboard();
     }
 
     function showQuestion() {
         resetState();
         updateProgressBar();
-        const question = currentQuestions[currentQuestionIndex];
+        const question = allQuestions[currentQuestionIndex];
         questionText.textContent = question.question;
         currentQuestionSpan.textContent = currentQuestionIndex + 1;
 
@@ -112,6 +135,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             button.addEventListener('click', selectAnswer);
             optionsList.appendChild(button);
         });
+
+        updateTurnHeader();
+        updateCompactLeaderboard();
     }
 
     function selectAnswer(e) {
@@ -119,11 +145,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isCorrect = selectedBtn.dataset.correct === 'true';
 
         if (isCorrect) {
-            score++;
+            teams[currentTeamIndex].score += 10; // Award 10 points for correct answer
             selectedBtn.classList.add('correct');
         } else {
             selectedBtn.classList.add('incorrect');
         }
+
+        // Increment the question count for this team
+        teamQuestionCounts[currentTeamIndex]++;
 
         Array.from(optionsList.children).forEach(button => {
             if (button.dataset.correct === 'true') {
@@ -131,46 +160,83 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             button.disabled = true;
         });
+
         nextBtn.classList.remove('hidden');
+        skipTeamBtn.classList.add('hidden');
+        updateCompactLeaderboard();
     }
 
     nextBtn.addEventListener('click', () => {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < currentQuestions.length) {
-            showQuestion();
-        } else {
-            showResult();
-        }
+        moveToNextQuestion();
     });
 
-    async function showResult() {
-        switchView(quizContainer, resultContainer);
-        const percentage = Math.round((score / currentQuestions.length) * 100);
-        const rating = getRating(percentage);
+    skipTeamBtn.addEventListener('click', () => {
+        moveToNextQuestion();
+    });
+
+    function moveToNextQuestion() {
+        currentQuestionIndex++;
         
-        resultTitle.textContent = `${rating.greeting} ${userName}!`;
-        resultRating.textContent = rating.title;
-        scoreSpan.textContent = `${score} من ${currentQuestions.length} (بنسبة ${percentage}%)`;
-        
-        try {
-            await db.collection('quizResults').add({
-                userName: userName,
-                score: score,
-                totalQuestions: currentQuestions.length,
-                difficulty: selectedDifficulty,
-                percentage: percentage,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            console.log('Quiz results saved successfully!');
-        } catch (error) {
-            console.error('Error saving quiz results:', error);
+        if (currentQuestionIndex >= allQuestions.length) {
+            showResult();
+            return;
         }
+        
+        // Find which team should answer the next question
+        let foundTeam = false;
+        for (let i = 0; i < teamQuestionAssignments.length; i++) {
+            if (teamQuestionAssignments[i].includes(currentQuestionIndex)) {
+                currentTeamIndex = i;
+                foundTeam = true;
+                break;
+            }
+        }
+        
+        // Fallback to round-robin if no assignment found
+        if (!foundTeam) {
+            currentTeamIndex = currentQuestionIndex % teams.length;
+        }
+        
+        showQuestion();
     }
 
-    restartBtn.addEventListener('click', () => location.reload()); // أسهل طريقة للبدء من جديد
+    function showResult() {
+        switchView(gameContainer, endGameContainer);
+        
+        // Sort teams by score to determine winner
+        const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
+        const winningTeam = sortedTeams[0];
+        
+        winnerAnnouncement.textContent = `الفريق الفائز هو ${winningTeam.name}!`;
+        celebration.textContent = '🎉';
+        
+        // Show all teams and their scores in a leaderboard-style format
+        finalScores.innerHTML = '<h3>النتائج النهائية</h3>';
+        
+        sortedTeams.forEach((team, index) => {
+            const teamScoreElement = document.createElement('div');
+            teamScoreElement.classList.add('leaderboard-team');
+            
+            // Add medal classes for top 3 teams
+            if (index === 0) teamScoreElement.classList.add('gold');
+            else if (index === 1) teamScoreElement.classList.add('silver');
+            else if (index === 2) teamScoreElement.classList.add('bronze');
+            
+            // Find how many questions this team answered
+            const questionsAnswered = teamQuestionCounts[team.id] || 0;
+            
+            teamScoreElement.innerHTML = `
+                <span class="rank">${index + 1}</span>
+                <span class="team-name">${team.name}</span>
+                <span class="team-score">${team.score}</span>
+                <span class="question-count">${questionsAnswered}</span>
+            `;
+            finalScores.appendChild(teamScoreElement);
+        });
+    }
 
-    // --- دوال مساعدة ---
-    
+    restartBtn.addEventListener('click', () => location.reload());
+
     function switchView(hide, show) {
         hide.classList.add('hidden');
         show.classList.remove('hidden');
@@ -179,74 +245,58 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function resetState() {
         nextBtn.classList.add('hidden');
+        skipTeamBtn.classList.remove('hidden');
         while (optionsList.firstChild) {
             optionsList.removeChild(optionsList.firstChild);
         }
     }
-    
+
     function updateProgressBar() {
-        const progressPercent = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+        const progressPercent = ((currentQuestionIndex + 1) / allQuestions.length) * 100;
         progressBar.style.width = `${progressPercent}%`;
     }
 
-    function getRating(percentage) {
-    if (percentage === 100) 
-        return { 
-            title: "أداء مثالي! أحسنت الإجابة على جميع الأسئلة.", 
-            greeting: "🏆 ممتاز يا", 
-            color: "#28a745" 
-        };
+    function updateCompactLeaderboard() {
+        compactLeaderboard.innerHTML = '';
+        
+        // Add leaderboard header
+        const headerElement = document.createElement('div');
+        headerElement.classList.add('compact-leaderboard-header');
+        headerElement.textContent = 'المتصدرون';
+        compactLeaderboard.appendChild(headerElement);
+        
+        // Sort teams by score (descending) for leaderboard
+        const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
+        
+        sortedTeams.forEach((team, index) => {
+            const teamElement = document.createElement('div');
+            teamElement.classList.add('compact-leaderboard-team');
+            
+            // Add medal classes for top 3 teams
+            if (index === 0) teamElement.classList.add('gold');
+            else if (index === 1) teamElement.classList.add('silver');
+            else if (index === 2) teamElement.classList.add('bronze');
+            
+            // Highlight the current team with green color
+            if (team.id === currentTeamIndex) {
+                teamElement.classList.add('active');
+            }
+            
+            // Find how many questions this team answered
+            const questionsAnswered = teamQuestionCounts[team.id] || 0;
+            
+            teamElement.innerHTML = `
+                <span class="compact-rank">${index + 1}</span>
+                <span class="compact-team-name">${team.name}</span>
+                <span class="compact-team-score">${team.score}</span>
+            `;
+            compactLeaderboard.appendChild(teamElement);
+        });
+    }
 
-    if (percentage >= 90) 
-        return { 
-            title: "أداء متميز جدًا! ذاكرتك قوية.", 
-            greeting: "🌟 أحسنت يا", 
-            color: "#28a745" 
-        };
-
-    if (percentage >= 80) 
-        return { 
-            title: "إجابات ممتازة! واضح أنك متمكن من المادة.", 
-            greeting: "🎉 تهانينا يا", 
-            color: "#17a2b8" 
-        };
-
-    if (percentage >= 70) 
-        return { 
-            title: "أداء جيد جدًا! ما زلت تحقق تقدمًا ملحوظًا.", 
-            greeting: "👏 عمل جيد يا", 
-            color: "#17a2b8" 
-        };
-
-    if (percentage >= 60) 
-        return { 
-            title: "نتيجة جيدة! استمر في التعلم والتطوير.", 
-            greeting: "👍 أحسنت يا", 
-            color: "#ffc107" 
-        };
-
-    if (percentage >= 50) 
-        return { 
-            title: "مجهود محترم! مع المزيد من التركيز ستتحسن النتائج.", 
-            greeting: "🤔 عمل طيب يا", 
-            color: "#ffc107" 
-        };
-
-    if (percentage >= 40) 
-        return { 
-            title: "لا تقلق! التجربة تصنع التقدم، استمر في المحاولة.", 
-            greeting: "💪 حاول مجددًا يا", 
-            color: "#ff9800" 
-        };
-
-    return { 
-        title: "المهم هو الاستمتاع بالتجربة! التعلم جزء من النجاح.", 
-        greeting: "🍀 لا تستسلم يا", 
-        color: "#dc3545" 
-    };
-}
-
-    restartBtn.addEventListener('click', () => location.reload()); // أسهل طريقة للبدء من جديد
-
-    // --- دوال مساعدة ---
+    function updateTurnHeader() {
+        const currentTeam = teams.find(t => t.id === currentTeamIndex);
+        currentTeamTurn.textContent = `دور فريق: ${currentTeam.name}`;
+        currentTeamScore.textContent = `النقاط: ${currentTeam.score}`;
+    }
 });

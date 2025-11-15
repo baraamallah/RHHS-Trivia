@@ -61,12 +61,193 @@ body::before {
     border-radius: 15px;
     box-shadow: var(--shadow);
     width: 95%;
-    max-width: 700px;
+    max-width: 1200px;
     overflow: hidden;
     padding: 2rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 2rem;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animated {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.quiz-header { padding-bottom: 1.5rem; margin-bottom: 1rem; }
+.school-logo { max-width: 100px; margin-bottom: 1rem; }
+h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
+.question-text { font-size: 1.5rem; font-weight: 600; margin-bottom: 2rem; min-height: 80px; }
+
+/* Intro Screen */
+.intro-body {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.intro-section {
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.intro-section h2, .intro-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.intro-list {
+    text-align: right;
+    padding-right: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding-right: 0;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.intro-list li {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.info-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Game Layout */
+.game-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.main-content-area {
+    flex: 1;
+}
+
+.sidebar {
+    width: 300px;
+}
+
+/* Compact Leaderboard */
+.compact-leaderboard {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 1rem;
+}
+
+.compact-leaderboard-header {
+    font-weight: bold;
+    padding: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.compact-leaderboard-team {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.compact-leaderboard-team.active {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    transform: scale(1.02);
+}
+
+.compact-leaderboard-team.gold {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #333;
+}
+
+.compact-leaderboard-team.silver {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%);
+    color: #333;
+}
+
+.compact-leaderboard-team.bronze {
+    background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
+    color: white;
+}
+
+.compact-rank {
+    font-weight: bold;
+    width: 25px;
+    text-align: center;
+}
+
+.compact-team-name {
+    flex-grow: 1;
+    font-weight: bold;
+    padding: 0 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.compact-team-score {
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+}
+
+.compact-leaderboard-team.active .compact-team-score {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Active team highlight in green */
+.leaderboard-team.active,
+.compact-leaderboard-team.active {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+    color: white !important;
+    transform: scale(1.02);
 }
 
 /* Animations */
@@ -555,6 +736,22 @@ h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
     background: var(--info-color);
 }
 
+@media (max-width: 992px) {
+    .game-layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        order: -1;
+        margin-bottom: 2rem;
+    }
+    
+    .compact-leaderboard {
+        position: static;
+    }
+}
+
 @media (max-width: 768px) {
     body {
         padding: 1rem;
@@ -588,6 +785,53 @@ h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
     
     .modal-content {
         width: 95%;
+    }
+    
+    /* Responsive leaderboard */
+    .leaderboard-header,
+    .leaderboard-team {
+        padding: 0.75rem;
+    }
+    
+    .team-name {
+        font-size: 1rem;
+    }
+    
+    .team-score {
+        font-size: 1.1rem;
+        width: 60px;
+    }
+    
+    .question-count {
+        width: 80px;
+        font-size: 0.8rem;
+    }
+    
+    .rank {
+        font-size: 1rem;
+        width: 30px;
+    }
+    
+    .leaderboard-header .rank-header {
+        width: 30px;
+    }
+    
+    .leaderboard-header .score-header {
+        width: 60px;
+    }
+    
+    .leaderboard-header .questions-header {
+        width: 80px;
+    }
+    
+    /* Compact leaderboard */
+    .compact-leaderboard-team {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .compact-team-name {
+        padding: 0 0.25rem;
     }
 }
 
@@ -689,109 +933,348 @@ h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
     background-color: #f8f9fa;
     font-weight: bold;
 }
-. a d m i n - c o n t a i n e r   {  
-         m a x - w i d t h :   1 2 0 0 p x ;  
-         m a r g i n :   0   a u t o ;  
- }  
-  
- . a d m i n - h e a d e r   {  
-         t e x t - a l i g n :   c e n t e r ;  
-         p a d d i n g :   2 r e m ;  
-         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
-         b o r d e r - b o t t o m :   1 p x   s o l i d   r g b a ( 0 ,   0 ,   0 ,   0 . 1 ) ;  
-         b o r d e r - r a d i u s :   1 5 p x   1 5 p x   0   0 ;  
- }  
-  
- . h e a d e r - l o g o   {  
-         m a x - w i d t h :   8 0 p x ;  
-         m a r g i n - b o t t o m :   1 r e m ;  
- }  
-  
- . s t a t s - o v e r v i e w   {  
-         d i s p l a y :   g r i d ;  
-         g r i d - t e m p l a t e - c o l u m n s :   r e p e a t ( a u t o - f i t ,   m i n m a x ( 2 0 0 p x ,   1 f r ) ) ;  
-         g a p :   1 . 5 r e m ;  
-         m a r g i n - b o t t o m :   2 r e m ;  
- }  
-  
- . s t a t - c a r d   {  
-         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
-         p a d d i n g :   1 . 5 r e m ;  
-         b o r d e r - r a d i u s :   1 0 p x ;  
-         b o x - s h a d o w :   v a r ( - - s h a d o w ) ;  
-         t e x t - a l i g n :   c e n t e r ;  
- }  
-  
- . s t a t - c a r d   h 3   {  
-         m a r g i n - b o t t o m :   0 . 5 r e m ;  
-         c o l o r :   # 6 c 7 5 7 d ;  
- }  
-  
- . s t a t - n u m b e r   {  
-         f o n t - s i z e :   2 r e m ;  
-         f o n t - w e i g h t :   b o l d ;  
-         c o l o r :   v a r ( - - p r i m a r y - c o l o r ) ;  
- }  
-  
- . f i l t e r s   {  
-         d i s p l a y :   f l e x ;  
-         j u s t i f y - c o n t e n t :   s p a c e - b e t w e e n ;  
-         a l i g n - i t e m s :   c e n t e r ;  
-         m a r g i n - b o t t o m :   1 . 5 r e m ;  
-         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
-         p a d d i n g :   1 r e m ;  
-         b o r d e r - r a d i u s :   1 0 p x ;  
- }  
-  
- . f i l t e r s   l a b e l   {  
-         f o n t - w e i g h t :   b o l d ;  
- }  
-  
- . f i l t e r s   s e l e c t   {  
-         p a d d i n g :   0 . 5 r e m ;  
-         b o r d e r - r a d i u s :   5 p x ;  
-         b o r d e r :   1 p x   s o l i d   # c e d 4 d a ;  
- }  
-  
- . e x p o r t - b t n   {  
-         p a d d i n g :   0 . 5 r e m   1 r e m ;  
-         b a c k g r o u n d :   v a r ( - - p r i m a r y - c o l o r ) ;  
-         c o l o r :   w h i t e ;  
-         b o r d e r :   n o n e ;  
-         b o r d e r - r a d i u s :   5 p x ;  
-         c u r s o r :   p o i n t e r ;  
-         t r a n s i t i o n :   b a c k g r o u n d - c o l o r   0 . 3 s ;  
- }  
-  
- . e x p o r t - b t n : h o v e r   {  
-         b a c k g r o u n d :   v a r ( - - s e c o n d a r y - c o l o r ) ;  
- }  
-  
- . r e s u l t s - c o n t a i n e r   {  
-         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
-         p a d d i n g :   2 r e m ;  
-         b o r d e r - r a d i u s :   1 0 p x ;  
-         b o x - s h a d o w :   v a r ( - - s h a d o w ) ;  
- }  
-  
- . t a b l e - w r a p p e r   {  
-         o v e r f l o w - x :   a u t o ;  
- }  
-  
- # r e s u l t s - t a b l e   {  
-         w i d t h :   1 0 0 % ;  
-         b o r d e r - c o l l a p s e :   c o l l a p s e ;  
- }  
-  
- # r e s u l t s - t a b l e   t h ,  
- # r e s u l t s - t a b l e   t d   {  
-         p a d d i n g :   1 r e m ;  
-         t e x t - a l i g n :   r i g h t ;  
-         b o r d e r - b o t t o m :   1 p x   s o l i d   # d e e 2 e 6 ;  
- }  
-  
- # r e s u l t s - t a b l e   t h   {  
-         b a c k g r o u n d - c o l o r :   # f 8 f 9 f a ;  
-         f o n t - w e i g h t :   b o l d ;  
- }  
+. a d m i n - c o n t a i n e r   {  
+         m a x - w i d t h :   1 2 0 0 p x ;  
+         m a r g i n :   0   a u t o ;  
+ }  
+  
+ . a d m i n - h e a d e r   {  
+         t e x t - a l i g n :   c e n t e r ;  
+         p a d d i n g :   2 r e m ;  
+         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
+         b o r d e r - b o t t o m :   1 p x   s o l i d   r g b a ( 0 ,   0 ,   0 ,   0 . 1 ) ;  
+         b o r d e r - r a d i u s :   1 5 p x   1 5 p x   0   0 ;  
+ }  
+  
+ . h e a d e r - l o g o   {  
+         m a x - w i d t h :   8 0 p x ;  
+         m a r g i n - b o t t o m :   1 r e m ;  
+ }  
+  
+ . s t a t s - o v e r v i e w   {  
+         d i s p l a y :   g r i d ;  
+         g r i d - t e m p l a t e - c o l u m n s :   r e p e a t ( a u t o - f i t ,   m i n m a x ( 2 0 0 p x ,   1 f r ) ) ;  
+         g a p :   1 . 5 r e m ;  
+         m a r g i n - b o t t o m :   2 r e m ;  
+ }  
+  
+ . s t a t - c a r d   {  
+         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
+         p a d d i n g :   1 . 5 r e m ;  
+         b o r d e r - r a d i u s :   1 0 p x ;  
+         b o x - s h a d o w :   v a r ( - - s h a d o w ) ;  
+         t e x t - a l i g n :   c e n t e r ;  
+ }  
+  
+ . s t a t - c a r d   h 3   {  
+         m a r g i n - b o t t o m :   0 . 5 r e m ;  
+         c o l o r :   # 6 c 7 5 7 d ;  
+ }  
+  
+ . s t a t - n u m b e r   {  
+         f o n t - s i z e :   2 r e m ;  
+         f o n t - w e i g h t :   b o l d ;  
+         c o l o r :   v a r ( - - p r i m a r y - c o l o r ) ;  
+ }  
+  
+ . f i l t e r s   {  
+         d i s p l a y :   f l e x ;  
+         j u s t i f y - c o n t e n t :   s p a c e - b e t w e e n ;  
+         a l i g n - i t e m s :   c e n t e r ;  
+         m a r g i n - b o t t o m :   1 . 5 r e m ;  
+         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
+         p a d d i n g :   1 r e m ;  
+    - r a d i u s :   1 0 p x ;  
+ }  
+  
+ . f i l t e r s   l a b e l   {  
+         f o n t - w e i g h t :   b o l d ;  
+ }  
+  
+ . f i l t e r s   s e l e c t   {  
+         p a d d i n g :   0 . 5 r e m ;  
+         b o r d e r - r a d i u s :   5 p x ;  
+         b o r d e r :   1 p x   s o l i d   # c e d 4 d a ;  
+ }  
+  
+ . e x p o r t - b t n   {  
+         p a d d i n g :   0 . 5 r e m   1 r e m ;  
+         b a c k g r o u n d :   v a r ( - - p r i m a r y - c o l o r ) ;  
+         c o l o r :   w h i t e ;  
+         b o r d e r :   n o n e ;  
+         b o r d e r - r a d i u s :   5 p x ;  
+         c u r s o r :   p o i n t e r ;  
+         t r a n s i t i o n :   b a c k g r o u n d - c o l o r   0 . 3 s ;  
+ }  
+  
+ . e x p o r t - b t n : h o v e r   {  
+         b a c k g r o u n d :   v a r ( - - s e c o n d a r y - c o l o r ) ;  
+ }  
+  
+ . r e s u l t s - c o n t a i n e r   {  
+         b a c k g r o u n d - c o l o r :   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 9 ) ;  
+         p a d d i n g :   2 r e m ;  
+         b o r d e r - r a d i u s :   1 0 p x ;  
+         b o x - s h a d o w :   v a r ( - - s h a d o w ) ;  
+ }  
+  
+ . t a b l e - w r a p p e r   {  
+         o v e r f l o w - x :   a u t o ;  
+ }  
+  
+ # r e s u l t s - t a b l e   {  
+         w i d t h :   1 0 0 % ;  
+         b o r d e r - c o l l a p s e :   c o l l a p s e ;  
+ }  
+  
+ # r e s u l t s - t a b l e   t h ,  
+ # r e s u l t s - t a b l e   t d   {  
+         p a d d i n g :   1 r e m ;  
+         t e x t - a l i g n :   r i g h t ;  
+         b o r d e r - b o t t o m :   1 p x   s o l i d   # d e e 2 e 6 ;  
+ }  
+  
+ # r e s u l t s - t a b l e   t h   {  
+         b a c k g r o u n d - c o l o r :   # f 8 f 9 f a ;  
+         f o n t - w e i g h t :   b o l d ;  
+ }  
  
+/* Team Creation */
+.teams-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.team-item {
+    background: #f0f0f0;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Leaderboard */
+.leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-header {
+    display: flex;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.leaderboard-header .rank-header {
+    width: 40px;
+}
+
+.leaderboard-header .name-header {
+    flex-grow: 1;
+}
+
+.leaderboard-header .score-header {
+    width: 80px;
+    text-align: center;
+}
+
+.leaderboard-header .questions-header {
+    width: 100px;
+    text-align: center;
+}
+
+.leaderboard-team {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+}
+
+.leaderboard-team:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-team.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    transform: scale(1.02);
+    border-color: var(--primary-color);
+}
+
+.leaderboard-team.gold {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #333;
+    position: relative;
+}
+
+.leaderboard-team.gold::before {
+    content: "🏆";
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    font-size: 1.5rem;
+    z-index: 1;
+}
+
+.leaderboard-team.silver {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%);
+    color: #333;
+    position: relative;
+}
+
+.leaderboard-team.silver::before {
+    content: "🥈";
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    font-size: 1.5rem;
+    z-index: 1;
+}
+
+.leaderboard-team.bronze {
+    background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
+    color: white;
+    position: relative;
+}
+
+.leaderboard-team.bronze::before {
+    content: "🥉";
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    font-size: 1.5rem;
+    z-index: 1;
+}
+
+.rank {
+    font-weight: bold;
+    margin-left: 1rem;
+    color: var(--primary-color);
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.team-name {
+    flex-grow: 1;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.team-score {
+    font-size: 1.3rem;
+    font-weight: bold;
+    width: 80px;
+    text-align: center;
+}
+
+.question-count {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+    width: 100px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+}
+
+.leaderboard-team.active .question-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.leaderboard-team.gold .rank,
+.leaderboard-team.silver .rank,
+.leaderboard-team.bronze .rank {
+    color: inherit;
+}
+
+/* Game Header */
+.game-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+#current-team-turn {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#current-team-score {
+    font-size: 1.2rem;
+}
+
+/* End of Game */
+#celebration {
+    font-size: 3rem;
+    animation: celebration-animation 1s infinite;
+}
+
+@keyframes celebration-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+#final-scores {
+    margin-top: 1.5rem;
+}
+
+.final-score-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.final-score-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.rank {
+    font-weight: bold;
+    margin-left: 1rem;
+    color: var(--primary-color);
+}
+
+.game-controls {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    justify-content: center;
+}
+
+.game-controls .btn {
+    flex: 1;
+    margin: 0;
+}
+
+.leaderboard-team .rank {
+    font-weight: bold;
+    margin-left: 1rem;
+    color: var(--primary-color);
+}

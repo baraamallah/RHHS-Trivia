@@ -15,6 +15,10 @@ document.getElementById('logout-btn')?.addEventListener('click', async () => {
     window.location.href = 'login.html';
 });
 
+document.getElementById('question-editor-btn')?.addEventListener('click', () => {
+    window.location.href = 'question-editor.html';
+});
+
 let allResults = [];
 let filteredResults = [];
 
@@ -144,6 +148,35 @@ document.getElementById('export-btn')?.addEventListener('click', () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+});
+
+document.getElementById('clear-responses-btn')?.addEventListener('click', async () => {
+    if (filteredResults.length === 0) {
+        alert('لا توجد ردود لمسحها');
+        return;
+    }
+    
+    const confirmClear = confirm('هل أنت متأكد من مسح جميع الردود؟ لا يمكن التراجع عن هذا الإجراء.');
+    if (!confirmClear) return;
+    
+    try {
+        // Delete all quiz results from Firestore
+        const batch = db.batch();
+        const snapshot = await db.collection('quizResults').get();
+        
+        snapshot.forEach((doc) => {
+            batch.delete(db.collection('quizResults').doc(doc.id));
+        });
+        
+        await batch.commit();
+        
+        // Reload the results
+        await loadQuizResults();
+        alert('تم مسح جميع الردود بنجاح!');
+    } catch (error) {
+        console.error('Error clearing responses:', error);
+        alert('خطأ في مسح الردود: ' + error.message);
+    }
 });
 
 window.onload = initializeAdmin;

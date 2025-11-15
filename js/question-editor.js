@@ -84,6 +84,10 @@ function initializeEventListeners() {
         window.location.href = 'login.html';
     });
     
+    document.getElementById('admin-panel-btn')?.addEventListener('click', () => {
+        window.location.href = 'admin.html';
+    });
+    
     document.getElementById('add-question-btn').addEventListener('click', openAddModal);
     document.getElementById('import-initial-btn').addEventListener('click', importInitialQuestions);
     document.getElementById('save-all-btn').addEventListener('click', saveAllChanges);

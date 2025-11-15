@@ -20,60 +20,62 @@
             </div>
         </header>
 
-        <div class="stats-overview">
-            <div class="stat-card">
-                <h3>إجمالي المشاركين</h3>
-                <p class="stat-number" id="total-participants">0</p>
+        <main>
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <h3>إجمالي المشاركين</h3>
+                    <p class="stat-number" id="total-participants">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>متوسط النتائج</h3>
+                    <p class="stat-number" id="average-score">0%</p>
+                </div>
+                <div class="stat-card">
+                    <h3>أعلى نتيجة</h3>
+                    <p class="stat-number" id="highest-score">0%</p>
+                </div>
+                <div class="stat-card">
+                    <h3>أدنى نتيجة</h3>
+                    <p class="stat-number" id="lowest-score">0%</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>متوسط النتائج</h3>
-                <p class="stat-number" id="average-score">0%</p>
-            </div>
-            <div class="stat-card">
-                <h3>أعلى نتيجة</h3>
-                <p class="stat-number" id="highest-score">0%</p>
-            </div>
-            <div class="stat-card">
-                <h3>أدنى نتيجة</h3>
-                <p class="stat-number" id="lowest-score">0%</p>
-            </div>
-        </div>
 
-        <div class="filters">
-            <label>
-                تصفية حسب الصعوبة:
-                <select id="difficulty-filter">
-                    <option value="all">الكل</option>
-                    <option value="easy">سهل</option>
-                    <option value="medium">متوسط</option>
-                    <option value="hard">صعب</option>
-                </select>
-            </label>
-            <button id="clear-responses-btn" class="export-btn" style="background: #dc3545;">🗑️ مسح الردود</button>
-            <button id="export-btn" class="export-btn">📥 تصدير البيانات (CSV)</button>
-        </div>
-
-        <div class="results-container">
-            <h2>نتائج الاختبارات</h2>
-            <div class="table-wrapper">
-                <table id="results-table">
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>النتيجة</th>
-                            <th>النسبة المئوية</th>
-                            <th>الصعوبة</th>
-                            <th>التاريخ والوقت</th>
-                        </tr>
-                    </thead>
-                    <tbody id="results-tbody">
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 2rem;">جاري تحميل البيانات...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="filters">
+                <label>
+                    تصفية حسب الصعوبة:
+                    <select id="difficulty-filter">
+                        <option value="all">الكل</option>
+                        <option value="easy">سهل</option>
+                        <option value="medium">متوسط</option>
+                        <option value="hard">صعب</option>
+                    </select>
+                </label>
+                <button id="clear-responses-btn" class="export-btn" style="background: #dc3545;">🗑️ مسح الردود</button>
+                <button id="export-btn" class="export-btn">📥 تصدير البيانات (CSV)</button>
             </div>
-        </div>
+
+            <div class="results-container">
+                <h2>نتائج الاختبارات</h2>
+                <div class="table-wrapper">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>النتيجة</th>
+                                <th>النسبة المئوية</th>
+                                <th>الصعوبة</th>
+                                <th>التاريخ والوقت</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-tbody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem;">جاري تحميل البيانات...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>

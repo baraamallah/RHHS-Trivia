@@ -1,24 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public read access to questions for the quiz
-    match /questions/{document} {
+
+    // Questions - read for everyone, write only for authenticated users
+    match /questions/{document=**} {
       allow read: if true;
       allow write: if request.auth != null;
     }
-    
-    // Allow users to save their quiz results
-    match /quizResults/{document} {
-      allow create: if true;
+
+    // Quiz results - write for everyone, read only for authenticated users
+    match /quizResults/{document=**} {
+      allow write: if true;
       allow read: if request.auth != null;
-      allow update: if request.auth != null;
-      // Only allow deletion for admins (authenticated users with admin claims)
-      allow delete: if request.auth != null && request.auth.token.admin == true;
-    }
-    
-    // Admin access for statistics and management
-    match /{document=**} {
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
+      allow delete: if request.auth != null;
     }
   }
 }

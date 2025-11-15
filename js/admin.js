@@ -175,7 +175,7 @@ document.getElementById('clear-responses-btn')?.addEventListener('click', async 
         alert('تم مسح جميع الردود بنجاح!');
     } catch (error) {
         console.error('Error clearing responses:', error);
-        alert('خطأ في مسح الردود: ' + error.message);
+        alert('خطأ في مسح الردود: ' + (error.message || 'حدث خطأ غير متوقع'));
     }
 });
 

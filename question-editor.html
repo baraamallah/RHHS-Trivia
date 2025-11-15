@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>محرر الأسئلة - RHHS Trivia</title>
-    <link rel="stylesheet" href="css/question-editor.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
-    <div id="editor-container" style="display: none;">
+<main class="main-content">
+    <div id="editor-container" class="editor-container">
         <header class="editor-header">
             <img src="images/logo.png" alt="شعار المدرسة" class="header-logo">
             <h1>✏️ محرر الأسئلة التفاعلي</h1>
             <p>إدارة وتعديل أسئلة الاختبار</p>
             <div style="margin-top: 1rem;">
                 <span id="user-email" style="color: #666; font-size: 0.9rem;"></span>
-                <button id="admin-panel-btn" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">📊 لوحة التحكم</button>
-                <button id="logout-btn" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 تسجيل الخروج</button>
+                <button id="admin-panel-btn" class="btn btn-info">📊 لوحة التحكم</button>
+                <button id="logout-btn" class="btn btn-danger">🚪 تسجيل الخروج</button>
             </div>
             <div class="header-actions">
                 <button id="add-question-btn" class="btn-primary">➕ إضافة سؤال جديد</button>
@@ -144,6 +145,7 @@
             </div>
         </div>
     </div>
+</main>
 
     <script src="js/questions.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -153,5 +155,22 @@
     
     <script src="js/firebase-config.js"></script>
     <script src="js/question-editor.js"></script>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logos">
+                <img src="images/logo.png" alt="Logo 1" class="footer-logo">
+                <img src="images/logo2.png" alt="Logo 2" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="about.html">عن المدرسة</a>
+            <a href="about.html"> فريق المطورين</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 جميع الحقوق محفوظة لثانوية رفيق الحريري.
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

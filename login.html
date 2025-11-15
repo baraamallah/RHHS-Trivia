@@ -5,160 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - RHHS Admin</title>
     <link rel="icon" href="images/logo.png" type="image/png">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            direction: rtl;
-        }
-
-        .login-container {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        .login-logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 0.5rem;
-            font-size: 2rem;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: right;
-        }
-
-        .form-group label {
-            display: block;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 1rem;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .btn-login:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-login:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid #f5c6cb;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .back-link {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-        }
-
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .back-link a:hover {
-            color: #5568d3;
-        }
-
-        .loading {
-            display: none;
-            margin-top: 1rem;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+<link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
+<main class="main-content">
     <div class="login-container">
         <img src="images/logo.png" alt="شعار المدرسة" class="login-logo">
         <h1>🔐 تسجيل الدخول</h1>
@@ -177,7 +28,7 @@
                 <input type="password" id="password" required placeholder="••••••••">
             </div>
 
-            <button type="submit" id="login-btn" class="btn-login">تسجيل الدخول</button>
+            <button type="submit" id="login-btn" class="btn btn-login">تسجيل الدخول</button>
         </form>
 
         <div id="loading" class="loading">
@@ -188,6 +39,7 @@
             <a href="index.html">← العودة إلى الاختبار</a>
         </div>
     </div>
+</main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -261,5 +113,22 @@
             });
         });
     </script>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logos">
+                <img src="images/logo.png" alt="Logo 1" class="footer-logo">
+                <img src="images/logo2.png" alt="Logo 2" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="about.html">عن المدرسة</a>
+            <a href="about.html"> فريق المطورين</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 جميع الحقوق محفوظة لثانوية رفيق الحريري.
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

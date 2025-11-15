@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم الإحصائيات - RHHS Trivia</title>
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="images/logo.png" type="image/png">
 </head>
 <body>
-    <div id="admin-container" style="display: none;">
+<main class="main-content">
+    <div id="admin-container" class="admin-container">
         <header class="admin-header">
             <img src="images/logo.png" alt="شعار المدرسة" class="header-logo">
             <h1>📊 لوحة تحكم الإحصائيات</h1>
             <p>مدرسة رفيق الحريري الثانوية</p>
             <div style="margin-top: 1rem;">
                 <span id="user-email" style="color: #666; font-size: 0.9rem;"></span>
-                <button id="question-editor-btn" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">📝 محرر الأسئلة</button>
-                <button id="logout-btn" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">🚪 تسجيل الخروج</button>
+                <button id="question-editor-btn" class="btn btn-success">📝 محرر الأسئلة</button>
+                <button id="logout-btn" class="btn btn-danger">🚪 تسجيل الخروج</button>
             </div>
         </header>
 
@@ -50,7 +51,7 @@
                         <option value="hard">صعب</option>
                     </select>
                 </label>
-                <button id="clear-responses-btn" class="export-btn" style="background: #dc3545;">🗑️ مسح الردود</button>
+                <button id="clear-responses-btn" class="btn btn-danger export-btn">🗑️ مسح الردود</button>
                 <button id="export-btn" class="export-btn">📥 تصدير البيانات (CSV)</button>
             </div>
 
@@ -77,6 +78,7 @@
             </div>
         </main>
     </div>
+</main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -85,5 +87,22 @@
     
     <script src="js/firebase-config.js"></script>
     <script src="js/admin.js"></script>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logos">
+                <img src="images/logo.png" alt="Logo 1" class="footer-logo">
+                <img src="images/logo2.png" alt="Logo 2" class="footer-logo">
+            </div>
+            <div class="footer-links">
+                <a href="about.html">عن المدرسة</a>
+            <a href="about.html"> فريق المطورين</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 جميع الحقوق محفوظة لثانوية رفيق الحريري.
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

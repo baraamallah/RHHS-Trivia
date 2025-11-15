@@ -29,6 +29,46 @@ body {
     min-height: 100vh;
     direction: rtl;
     transition: background-color 0.5s ease;
+    font-size: 16px; /* Base font size for better readability */
+}
+
+/* Enhanced desktop typography */
+@media (min-width: 1200px) {
+    body {
+        font-size: 18px;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .question-text {
+        font-size: 1.8rem;
+        min-height: 100px;
+        line-height: 1.5;
+    }
+    
+    .option-btn {
+        font-size: 1.3rem;
+        padding: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .btn {
+        font-size: 1.3rem;
+        padding: 18px 35px;
+        margin-top: 1.5rem;
+    }
+    
+    .quiz-footer {
+        font-size: 1.2rem;
+        padding-top: 2rem;
+        margin-top: 2rem;
+    }
 }
 
 .main-content {
@@ -154,14 +194,158 @@ h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
     display: flex;
     gap: 2rem;
     align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .main-content-area {
     flex: 1;
+    min-width: 0; /* Allow flex item to shrink below content size */
 }
 
 .sidebar {
-    width: 300px;
+    width: 350px;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+}
+
+/* Enhanced desktop layout for larger screens */
+@media (min-width: 1400px) {
+    .game-layout {
+        max-width: 1600px;
+    }
+    
+    .main-content-area {
+        flex: 1.2; /* Give more space to main content */
+    }
+    
+    .sidebar {
+        width: 400px;
+    }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 1200px) {
+    .quiz-container {
+        padding: 2.5rem;
+        max-width: 1400px;
+    }
+    
+    .game-layout {
+        gap: 3rem;
+    }
+    
+    .main-content-area {
+        padding-right: 1rem;
+    }
+    
+    .sidebar {
+        width: 380px;
+    }
+    
+    .question-text {
+        font-size: 1.8rem;
+        min-height: 100px;
+    }
+    
+    .option-btn {
+        font-size: 1.3rem;
+        padding: 18px;
+    }
+    
+    .btn {
+        font-size: 1.3rem;
+        padding: 18px 35px;
+    }
+    
+    .compact-leaderboard {
+        padding: 1.5rem;
+    }
+    
+    .compact-leaderboard-team {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+}
+
+/* Compact Leaderboard */
+.compact-leaderboard {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+}
+
+.compact-leaderboard-header {
+    font-weight: bold;
+    padding: 0.75rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.compact-leaderboard-team {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.compact-leaderboard-team.active {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+}
+
+/* Enhanced leaderboard for desktop */
+@media (min-width: 1200px) {
+    .compact-leaderboard {
+        padding: 1.5rem;
+        max-height: calc(100vh - 3rem);
+    }
+    
+    .compact-leaderboard-header {
+        padding: 1rem;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .compact-leaderboard-team {
+        padding: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .compact-rank {
+        width: 30px;
+        font-size: 1.2rem;
+    }
+    
+    .compact-team-name {
+        flex-grow: 1;
+        font-weight: bold;
+        padding: 0 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .compact-team-score {
+        font-weight: bold;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 15px;
+        font-size: 1.1rem;
+    }
 }
 
 /* Compact Leaderboard */
@@ -353,6 +537,40 @@ h1 { margin: 0; color: var(--primary-color); font-weight: 700; }
 .btn-delete:active,
 .btn-duplicate:active {
     transform: translateY(0);
+}
+
+/* Enhanced button styles for desktop */
+@media (min-width: 1200px) {
+    .btn,
+    .btn-primary,
+    .btn-success,
+    .btn-secondary,
+    .btn-danger,
+    .btn-warning,
+    .btn-info,
+    .btn-edit,
+    .btn-delete,
+    .btn-duplicate {
+        padding: 18px 35px;
+        font-size: 1.3rem;
+        border-radius: 10px;
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Game control buttons */
+    .game-controls {
+        display: flex;
+        gap: 1.5rem;
+        margin: 2rem 0;
+        justify-content: center;
+    }
+    
+    .game-controls .btn {
+        flex: 1;
+        margin: 0;
+        max-width: 300px;
+    }
 }
 
 .btn-primary { background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); }

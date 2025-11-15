@@ -24,13 +24,41 @@ let filteredResults = [];
 
 async function loadQuizResults() {
     try {
-        const snapshot = await db.collection('quizResults')
+        // Load individual quiz results
+        const quizResultsSnapshot = await db.collection('quizResults')
+            .orderBy('timestamp', 'desc')
+            .get();
+        
+        // Load group competition results
+        const groupResultsSnapshot = await db.collection('groupCompetitionResults')
             .orderBy('timestamp', 'desc')
             .get();
         
         allResults = [];
-        snapshot.forEach((doc) => {
-            allResults.push({ id: doc.id, ...doc.data() });
+        
+        // Process individual quiz results
+        quizResultsSnapshot.forEach((doc) => {
+            allResults.push({ 
+                id: doc.id, 
+                ...doc.data(),
+                resultType: 'individual'
+            });
+        });
+        
+        // Process group competition results
+        groupResultsSnapshot.forEach((doc) => {
+            allResults.push({ 
+                id: doc.id, 
+                ...doc.data(),
+                resultType: 'group'
+            });
+        });
+        
+        // Sort all results by timestamp (newest first)
+        allResults.sort((a, b) => {
+            const dateA = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp);
+            const dateB = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp);
+            return dateB - dateA;
         });
         
         filteredResults = [...allResults];
@@ -64,25 +92,40 @@ function displayResults(results) {
             minute: '2-digit'
         });
         
-        const difficultyMap = {
-            'easy': 'سهل',
-            'medium': 'متوسط',
-            'hard': 'صعب',
-            'all': 'كل الأسئلة'
-        };
-        
-        const percentageClass = 
-            result.percentage >= 90 ? 'excellent' :
-            result.percentage >= 70 ? 'good' :
-            result.percentage >= 50 ? 'average' : 'poor';
-        
-        tr.innerHTML = `
-            <td>${result.userName}</td>
-            <td>${result.score} / ${result.totalQuestions}</td>
-            <td class="${percentageClass}">${result.percentage}%</td>
-            <td>${difficultyMap[result.difficulty] || result.difficulty}</td>
-            <td>${formattedDate}</td>
-        `;
+        if (result.resultType === 'group') {
+            // Handle group competition results
+            const winningTeam = result.teams[0];
+            const totalTeams = result.teams.length;
+            
+            tr.innerHTML = `
+                <td>مسابقة جماعية (${totalTeams} فرق)</td>
+                <td>${winningTeam.name} (${winningTeam.score} نقطة)</td>
+                <td class="good">-</td>
+                <td>مسابقة جماعية</td>
+                <td>${formattedDate}</td>
+            `;
+        } else {
+            // Handle individual quiz results
+            const difficultyMap = {
+                'easy': 'سهل',
+                'medium': 'متوسط',
+                'hard': 'صعب',
+                'all': 'كل الأسئلة'
+            };
+            
+            const percentageClass = 
+                result.percentage >= 90 ? 'excellent' :
+                result.percentage >= 70 ? 'good' :
+                result.percentage >= 50 ? 'average' : 'poor';
+            
+            tr.innerHTML = `
+                <td>${result.userName}</td>
+                <td>${result.score} / ${result.totalQuestions}</td>
+                <td class="${percentageClass}">${result.percentage}%</td>
+                <td>${difficultyMap[result.difficulty] || result.difficulty}</td>
+                <td>${formattedDate}</td>
+            `;
+        }
         
         tbody.appendChild(tr);
     });
@@ -97,8 +140,20 @@ function updateStats(results) {
         return;
     }
     
-    const percentages = results.map(r => r.percentage);
-    const total = results.length;
+    // Filter only individual quiz results for stats calculation
+    const individualResults = results.filter(r => r.resultType !== 'group');
+    
+    if (individualResults.length === 0) {
+        // If no individual results, show basic stats
+        document.getElementById('total-participants').textContent = results.length;
+        document.getElementById('average-score').textContent = '-';
+        document.getElementById('highest-score').textContent = '-';
+        document.getElementById('lowest-score').textContent = '-';
+        return;
+    }
+    
+    const percentages = individualResults.map(r => r.percentage);
+    const total = individualResults.length;
     const average = Math.round(percentages.reduce((a, b) => a + b, 0) / total);
     const highest = Math.max(...percentages);
     const lowest = Math.min(...percentages);
@@ -128,13 +183,21 @@ document.getElementById('export-btn')?.addEventListener('click', () => {
         return;
     }
     
-    let csv = 'الاسم,النتيجة,إجمالي الأسئلة,النسبة المئوية,الصعوبة,التاريخ والوقت\n';
+    let csv = 'الاسم,النتيجة,النسبة المئوية,الصعوبة,التاريخ والوقت,نوع النتيجة\n';
     
     filteredResults.forEach(result => {
         const date = result.timestamp?.toDate ? result.timestamp.toDate() : new Date(result.timestamp);
         const formattedDate = date.toLocaleString('ar-LB');
         
-        csv += `"${result.userName}",${result.score},${result.totalQuestions},${result.percentage}%,"${result.difficulty}","${formattedDate}"\n`;
+        if (result.resultType === 'group') {
+            // Handle group competition results
+            const winningTeam = result.teams[0];
+            const totalTeams = result.teams.length;
+            csv += `"مسابقة جماعية (${totalTeams} فرق)",${winningTeam.name} (${winningTeam.score} نقطة),-,"مسابقة جماعية","${formattedDate}",مجموعة\n`;
+        } else {
+            // Handle individual quiz results
+            csv += `"${result.userName}",${result.score}/${result.totalQuestions},${result.percentage}%,"${result.difficulty}","${formattedDate}",فرد\n`;
+        }
     });
     
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -162,10 +225,17 @@ document.getElementById('clear-responses-btn')?.addEventListener('click', async 
     try {
         // Delete all quiz results from Firestore
         const batch = db.batch();
-        const snapshot = await db.collection('quizResults').get();
         
-        snapshot.forEach((doc) => {
+        // Delete individual quiz results
+        const quizResultsSnapshot = await db.collection('quizResults').get();
+        quizResultsSnapshot.forEach((doc) => {
             batch.delete(db.collection('quizResults').doc(doc.id));
+        });
+        
+        // Delete group competition results
+        const groupResultsSnapshot = await db.collection('groupCompetitionResults').get();
+        groupResultsSnapshot.forEach((doc) => {
+            batch.delete(db.collection('groupCompetitionResults').doc(doc.id));
         });
         
         await batch.commit();

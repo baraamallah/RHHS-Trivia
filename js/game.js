@@ -217,6 +217,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function showResult() {
+        // Stop any active timer
+        stopTimer();
+        
         switchView(gameContainer, endGameContainer);
         
         // Sort teams by score to determine winner
@@ -249,6 +252,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             finalScores.appendChild(teamScoreElement);
         });
+        
+        // Save results to Firestore
+        saveGroupCompetitionResults(sortedTeams);
+    }
+    
+    // Function to save group competition results to Firestore
+    async function saveGroupCompetitionResults(teams) {
+        try {
+            // Prepare the data to be saved
+            const resultsData = {
+                teams: teams.map(team => ({
+                    name: team.name,
+                    score: team.score,
+                    id: team.id,
+                    questionsAnswered: teamQuestionCounts[team.id] || 0
+                })),
+                totalQuestions: allQuestions.length,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                gameType: 'group-competition'
+            };
+            
+            // Save to Firestore
+            await db.collection('groupCompetitionResults').add(resultsData);
+            console.log('Group competition results saved successfully');
+        } catch (error) {
+            console.error('Error saving group competition results:', error);
+        }
     }
 
     restartBtn.addEventListener('click', () => location.reload());

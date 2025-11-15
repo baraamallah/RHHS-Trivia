@@ -144,7 +144,14 @@
     <script src="js/footer.js"></script>
     <script src="js/game.js"></script>
     
-    <!-- Vercel Analytics -->
-    <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
+    <!-- Vercel Analytics - only load when deployed -->
+    <script>
+        if (window.location.protocol === 'https:' || window.location.hostname !== 'localhost') {
+            const script = document.createElement('script');
+            script.src = 'https://va.vercel-scripts.com/v1/script.js';
+            script.defer = true;
+            document.body.appendChild(script);
+        }
+    </script>
 </body>
 </html>

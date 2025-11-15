@@ -90,47 +90,73 @@ function readFileAsText(file) {
 function extractQuestionsFromFileContent(content) {
     // Try to extract the questions array from the file content
     try {
-        // Look for an array assignment in the file content
-        // This regex looks for arrays that might contain questions
-        const arrayPatterns = [
-            /(?:var|let|const)\s+(?:schoolQuestions|questions)\s*=\s*(\[[\s\S]*?\]);/,
-            /(?:schoolQuestions|questions)\s*=\s*(\[[\s\S]*?\]);/
-        ];
+        // First, try to find a variable declaration with an array
+        const varPattern = /(?:var|let|const)\s+(?:schoolQuestions|questions)\s*=\s*(\[[\s\S]*?\]);?/;
+        const directAssignmentPattern = /(?:schoolQuestions|questions)\s*=\s*(\[[\s\S]*?\]);?/;
         
-        for (const pattern of arrayPatterns) {
-            const match = content.match(pattern);
-            if (match && match[1]) {
+        let match = content.match(varPattern) || content.match(directAssignmentPattern);
+        
+        if (match && match[1]) {
+            try {
+                // Clean up the matched content to make it valid JSON
+                let arrayString = match[1];
+                
+                // Handle potential trailing commas
+                arrayString = arrayString.replace(/,\s*]/g, ']');
+                arrayString = arrayString.replace(/,\s*}/g, '}');
+                
+                // Parse as JSON first
+                const parsed = JSON.parse(arrayString);
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
+            } catch (jsonError) {
+                console.warn('JSON parsing failed, trying JavaScript evaluation:', jsonError);
                 try {
-                    // Safely parse the array content
-                    const parsed = JSON.parse(match[1]);
-                    if (Array.isArray(parsed)) {
-                        return parsed;
+                    // If JSON parsing fails, try to evaluate as JavaScript
+                    // Create a safer evaluation context
+                    const sanitizedContent = `
+                        (function() {
+                            try {
+                                ${content}
+                                return typeof schoolQuestions !== 'undefined' ? schoolQuestions : 
+                                       typeof questions !== 'undefined' ? questions : null;
+                            } catch (e) {
+                                return null;
+                            }
+                        })()
+                    `;
+                    const result = eval(sanitizedContent);
+                    if (Array.isArray(result)) {
+                        return result;
                     }
-                } catch (parseError) {
-                    console.warn('Could not parse as JSON, trying eval:', parseError);
-                    // Fallback to eval if JSON parsing fails
-                    try {
-                        const evaluated = eval(`(${match[1]})`);
-                        if (Array.isArray(evaluated)) {
-                            return evaluated;
-                        }
-                    } catch (evalError) {
-                        console.error('Error evaluating content:', evalError);
-                    }
+                } catch (evalError) {
+                    console.error('JavaScript evaluation failed:', evalError);
                 }
             }
         }
         
-        // If we can't find a pattern, try to evaluate the whole content
-        const evalFunction = new Function(`
-            ${content}
-            return typeof schoolQuestions !== 'undefined' ? schoolQuestions : 
-                   typeof questions !== 'undefined' ? questions : null;
-        `);
+        // If pattern matching fails, try to find any array in the content
+        // Look for the first array that looks like questions
+        const arrayPattern = /(\[[\s\S]*?\]);?/;
+        const arrayMatch = content.match(arrayPattern);
         
-        const result = evalFunction();
-        if (Array.isArray(result)) {
-            return result;
+        if (arrayMatch && arrayMatch[1]) {
+            try {
+                let arrayString = arrayMatch[1];
+                // Handle potential trailing commas
+                arrayString = arrayString.replace(/,\s*]/g, ']');
+                arrayString = arrayString.replace(/,\s*}/g, '}');
+                
+                const parsed = JSON.parse(arrayString);
+                if (Array.isArray(parsed) && parsed.length > 0 && 
+                    typeof parsed[0] === 'object' && parsed[0] !== null &&
+                    'question' in parsed[0] && 'options' in parsed[0]) {
+                    return parsed;
+                }
+            } catch (error) {
+                console.warn('Failed to parse array content:', error);
+            }
         }
         
         return null;
